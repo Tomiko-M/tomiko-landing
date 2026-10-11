@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>tomiko — record &amp; replay LLM calls in your tests</title>
+  <meta name="description" content="The first run records real LLM responses. Every run after replays them. Agent tests that run offline in milliseconds, cost nothing, and give the same answer every time.">
+  <meta name="theme-color" content="#0e0d0c">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="tomiko — record &amp; replay LLM calls in your tests">
+  <meta property="og:description" content="Agent tests that run offline in milliseconds, cost nothing, and give the same answer every time.">
+  <meta property="og:image" content="assets/img/social-preview.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400..600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><span></span></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ───────────── NAV ───────────── -->
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="logo" href="#top" aria-label="tomiko home">tomiko<span>.</span></a>
+      <nav class="nav__links" aria-label="Sections">
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#faults">Failures</a>
+        <a href="#viewer">Viewer</a>
+        <a href="#code">Docs</a>
+      </nav>
+      <div class="nav__cta">
+        <a class="nav__icon" href="https://www.npmjs.com/package/tomiko" target="_blank" rel="noopener" aria-label="tomiko on npm">npm</a>
+        <a class="btn btn--small btn--ghost" href="https://github.com/saykachi/tomiko" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ───────────── HERO ───────────── -->
+    <section class="hero">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__glow hero__glow--a"></div>
+        <div class="hero__glow hero__glow--b"></div>
+        <div class="hero__grid"></div>
+      </div>
+
+      <div class="hero__inner">
+        <div class="hero__copy">
+          <a class="pill" href="https://www.npmjs.com/package/tomiko" target="_blank" rel="noopener" data-reveal>
+            <span class="pill__dot"></span> v0.1 is on npm <span class="pill__sep">·</span> MIT <span class="pill__arrow">→</span>
+          </a>
+          <h1 class="hero__title" data-reveal style="--d:.08s">
+            <span class="line">Record once.</span>
+            <span class="line">Replay <em class="serif">forever.</em></span>
+          </h1>
+          <p class="hero__lede" data-reveal style="--d:.16s">
+            The first run records real LLM responses. Every run after replays them.
+            Agent tests that run <b>offline</b>, in <b>milliseconds</b>, for <b>zero tokens</b> —
+            and give the same answer every time.
+          </p>
+          <div class="hero__actions" data-reveal style="--d:.24s">
+            <button class="install" type="button" data-copy="npm install --save-dev tomiko" aria-label="Copy install command">
+              <span class="install__prompt">$</span>
+              <code>npm i -D tomiko</code>
+              <span class="install__icon" aria-hidden="true">
+                <svg class="i-copy" viewBox="0 0 24 24" width="18" height="18"><rect x="9" y="9" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <svg class="i-ok" viewBox="0 0 24 24" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
+            <a class="btn btn--primary magnetic" href="#code">
+              Read the docs
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+          <ul class="hero__badges" data-reveal style="--d:.32s">
+            <li><span>0</span> dependencies</li>
+            <li><span>Node</span> ≥ 20</li>
+            <li><span>Vitest</span> · Jest · any runner</li>
+          </ul>
+        </div>
+
+        <!-- Cassette deck -->
+        <div class="deck" data-reveal style="--d:.2s" data-mode="rec">
+          <div class="deck__status" aria-live="polite">
+            <span class="deck__led"></span>
+            <span class="deck__label" data-rec="REC" data-play="PLAY">REC</span>
+            <span class="deck__meta" data-rec="first run · real API · $0.0157" data-play="replay · no network · $0.0000">first run · real API · $0.0157</span>
+          </div>
+
+          <svg class="cassette" viewBox="0 0 440 280" role="img" aria-label="An animated cassette tape labelled booking.test.ts">
+            <defs>
+              <linearGradient id="shell" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#2f2a25"/>
+                <stop offset="1" stop-color="#1f1b18"/>
+              </linearGradient>
+              <linearGradient id="label" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#f3ebde"/>
+                <stop offset="1" stop-color="#e4d7c2"/>
+              </linearGradient>
+              <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+                <stop offset=".5" stop-color="#fff" stop-opacity=".35"/>
+                <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+              </linearGradient>
+              <clipPath id="labelClip"><rect x="34" y="28" width="372" height="168" rx="12"/></clipPath>
+              <radialGradient id="tape" cx=".5" cy=".5" r=".5">
+                <stop offset=".55" stop-color="#3a2a20"/>
+                <stop offset="1" stop-color="#20160f"/>
+              </radialGradient>
+            </defs>
+
+            <!-- shell -->
+            <rect x="6" y="6" width="428" height="268" rx="22" fill="url(#shell)" stroke="#4a413a" stroke-width="2"/>
+            <circle cx="24" cy="24" r="5" fill="#15120f"/><circle cx="416" cy="24" r="5" fill="#15120f"/>
+            <circle cx="24" cy="256" r="5" fill="#15120f"/><circle cx="416" cy="256" r="5" fill="#15120f"/>
+
+            <!-- label -->
+            <g clip-path="url(#labelClip)">
+              <rect x="34" y="28" width="372" height="168" rx="12" fill="url(#label)"/>
+              <rect x="34" y="28" width="372" height="22" fill="#f0885b"/>
+              <rect x="34" y="50" width="372" height="5" fill="#c2491f"/>
+              <text x="52" y="44" class="c-mono" font-size="11" fill="#2a1a10" font-weight="600">SIDE A · tomiko</text>
+              <text x="388" y="44" class="c-mono" font-size="11" fill="#2a1a10" text-anchor="end">C-60</text>
+              <text x="52" y="78" class="c-hand" font-size="18" fill="#2a2623">booking.test.ts</text>
+              <line x1="52" y1="88" x2="388" y2="88" stroke="#d3c3a8" stroke-width="1.5"/>
+              <rect class="sheen" x="-120" y="28" width="90" height="168" fill="url(#sheen)" transform="skewX(-18)"/>
+            </g>
+
+            <!-- window -->
+            <rect x="110" y="100" width="220" height="74" rx="37" fill="#0c0b0a" stroke="#3b342e" stroke-width="2"/>
+            <!-- tape packs -->
+            <circle class="pack pack--l" cx="156" cy="137" r="33" fill="url(#tape)"/>
+            <circle class="pack pack--r" cx="284" cy="137" r="33" fill="url(#tape)"/>
+            <!-- reels -->
+            <g class="reel reel--l">
+              <circle cx="156" cy="137" r="20" fill="#efe6d8"/>
+              <circle cx="156" cy="137" r="8" fill="#0c0b0a"/>
+              <g fill="#0c0b0a">
+                <rect x="153" y="117" width="6" height="9" rx="1.5"/>
+                <rect x="153" y="117" width="6" height="9" rx="1.5" transform="rotate(60 156 137)"/>
+                <rect x="153" y="117" width="6" height="9" rx="1.5" transform="rotate(120 156 137)"/>
+                <rect x="153" y="117" width="6" height="9" rx="1.5" transform="rotate(180 156 137)"/>
+                <rect x="153" y="117" width="6" height="9" rx="1.5" transform="rotate(240 156 137)"/>
+                <rect x="153" y="117" width="6" height="9" rx="1.5" transform="rotate(300 156 137)"/>
+              </g>
+            </g>
+            <g class="reel reel--r">
+              <circle cx="284" cy="137" r="20" fill="#efe6d8"/>
+              <circle cx="284" cy="137" r="8" fill="#0c0b0a"/>
+              <g fill="#0c0b0a">
+                <rect x="281" y="117" width="6" height="9" rx="1.5"/>
+                <rect x="281" y="117" width="6" height="9" rx="1.5" transform="rotate(60 284 137)"/>
+                <rect x="281" y="117" width="6" height="9" rx="1.5" transform="rotate(120 284 137)"/>
+                <rect x="281" y="117" width="6" height="9" rx="1.5" transform="rotate(180 284 137)"/>
+                <rect x="281" y="117" width="6" height="9" rx="1.5" transform="rotate(240 284 137)"/>
+                <rect x="281" y="117" width="6" height="9" rx="1.5" transform="rotate(300 284 137)"/>
+              </g>
+            </g>
+            <!-- counter window -->
+            <rect x="196" y="126" width="48" height="22" rx="4" fill="#1a1613" stroke="#3b342e"/>
+            <text class="c-mono counter" x="220" y="141.5" font-size="12" fill="#f0885b" text-anchor="middle">000</text>
+
+            <!-- bottom trapezoid -->
+            <path d="M92 274 L112 216 L328 216 L348 274 Z" fill="#26211d" stroke="#4a413a" stroke-width="2"/>
+            <circle cx="150" cy="246" r="7" fill="#15120f"/><circle cx="290" cy="246" r="7" fill="#15120f"/>
+            <rect x="196" y="236" width="48" height="16" rx="3" fill="#15120f"/>
+          </svg>
+
+          <!-- floating chips -->
+          <div class="chip chip--a" aria-hidden="true"><i class="ok"></i>200 · end_turn</div>
+          <div class="chip chip--b" aria-hidden="true"><span class="tool">→ book_table</span> {"guests":2}</div>
+          <div class="chip chip--c" aria-hidden="true"><i class="warn"></i>429 · rate_limit</div>
+          <div class="chip chip--d" aria-hidden="true">$0.0000 <span class="muted">replayed</span></div>
+        </div>
+      </div>
+
+      <a class="scroll-cue" href="#run" aria-label="Scroll to the demo"><span></span></a>
+    </section>
+
+    <!-- ───────────── MARQUEE ───────────── -->
+    <section class="marquee" aria-label="Works with">
+      <div class="marquee__track">
+        <div class="marquee__group">
+          <span>Anthropic SDK</span><i>✦</i><span>OpenAI SDK</span><i>✦</i><span>Vercel AI SDK</span><i>✦</i><span>LangChain.js</span><i>✦</i><span>plain <code>fetch</code></span><i>✦</i><span>Vitest</span><i>✦</i><span>Jest</span><i>✦</i><span>Streaming SSE</span><i>✦</i><span>Tool calls</span><i>✦</i>
+        </div>
+        <div class="marquee__group" aria-hidden="true">
+          <span>Anthropic SDK</span><i>✦</i><span>OpenAI SDK</span><i>✦</i><span>Vercel AI SDK</span><i>✦</i><span>LangChain.js</span><i>✦</i><span>plain <code>fetch</code></span><i>✦</i><span>Vitest</span><i>✦</i><span>Jest</span><i>✦</i><span>Streaming SSE</span><i>✦</i><span>Tool calls</span><i>✦</i>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── TERMINAL DEMO ───────────── -->
+    <section class="section run" id="run">
+      <div class="wrap">
+        <div class="section__head" data-reveal>
+          <span class="eyebrow">01 — The loop</span>
+          <h2>Seconds and cents, <em class="serif">once.</em><br>Milliseconds and nothing, after.</h2>
+          <p>Run it with your API key and tomiko records every request next to the test. Commit the file. From then on the test replays it — with no network, no key and no tokens.</p>
+        </div>
+
+        <div class="run__grid">
+          <div class="term" data-reveal data-term>
+            <div class="term__bar">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span class="term__title">~/agent — zsh</span>
+              <button class="term__replay" type="button" data-term-replay aria-label="Replay the terminal demo">↻ replay</button>
+            </div>
+            <pre class="term__body" aria-live="off"><code data-term-out></code><span class="caret" aria-hidden="true"></span></pre>
+          </div>
+
+          <div class="race" data-reveal style="--d:.1s">
+            <div class="race__row">
+              <div class="race__label"><b>First run</b><span>real API · recorded</span></div>
+              <div class="race__bar"><span class="race__fill race__fill--rec" data-race="rec"></span></div>
+              <div class="race__num"><b data-race-time="rec">0</b> ms</div>
+            </div>
+            <div class="race__row">
+              <div class="race__label"><b>Every run after</b><span>cassette · offline</span></div>
+              <div class="race__bar"><span class="race__fill race__fill--play" data-race="play"></span></div>
+              <div class="race__num"><b data-race-time="play">0</b> ms</div>
+            </div>
+            <p class="race__note">Real timings: a <code>fetch</code> to the npm registry, recorded on the first run, then replayed from the cassette. Click to race again.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── HOW IT WORKS ───────────── -->
+    <section class="section how" id="how">
+      <div class="wrap">
+        <div class="section__head" data-reveal>
+          <span class="eyebrow">02 — How it works</span>
+          <h2>One file between your test <br>and the <em class="serif">expensive part.</em></h2>
+          <p>tomiko sits on <code>fetch</code>. In <code>auto</code> mode it records what's missing. On CI it switches to <code>replay</code> and never touches the network.</p>
+        </div>
+
+        <div class="flow" data-reveal data-flow data-mode="record">
+          <div class="flow__tabs" role="tablist" aria-label="Mode">
+            <button role="tab" aria-selected="true" data-flow-tab="record"><span class="led led--rec"></span><span class="hide-sm">First run · </span>record</button>
+            <button role="tab" aria-selected="false" data-flow-tab="replay"><span class="led led--play"></span><span class="hide-sm">Every run after · </span>replay</button>
+            <span class="flow__thumb" aria-hidden="true"></span>
+          </div>
+
+          <svg class="flow__svg flow__svg--wide" viewBox="0 0 960 360" role="img" aria-label="Your test calls tomiko. On the first run tomiko forwards requests to the LLM API and writes the answers to a cassette. On every run after, tomiko answers from the cassette and the API is not called.">
+            <defs>
+              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <!-- wires -->
+            <path id="w-test-tomiko" class="wire" d="M232 120 H392"/>
+            <path id="w-tomiko-api" class="wire wire--api" d="M568 120 H728"/>
+            <path id="w-tomiko-cas" class="wire wire--cas" d="M480 160 V242"/>
+            <path id="w-api-back" d="M728 132 H568" fill="none"/>
+            <path id="w-tomiko-back" d="M392 132 H232" fill="none"/>
+            <path id="w-cas-up" d="M492 242 V160" fill="none"/>
+
+            <!-- nodes -->
+            <g class="node">
+              <rect x="56" y="80" width="176" height="80" rx="18"/>
+              <text x="144" y="116" text-anchor="middle" class="n-title">your test</text>
+              <text x="144" y="139" text-anchor="middle" class="n-sub">booking.test.ts</text>
+            </g>
+            <g class="node node--brand">
+              <rect x="392" y="80" width="176" height="80" rx="18"/>
+              <text x="480" y="116" text-anchor="middle" class="n-title">tomiko</text>
+              <text x="480" y="139" text-anchor="middle" class="n-sub" data-flow-sub>mode: auto</text>
+            </g>
+            <g class="node node--api">
+              <rect x="728" y="80" width="176" height="80" rx="18"/>
+              <text x="816" y="116" text-anchor="middle" class="n-title">LLM API</text>
+              <text x="816" y="139" text-anchor="middle" class="n-sub">api.anthropic.com</text>
+              <g class="api-off">
+                <line x1="742" y1="94" x2="890" y2="146"/>
+                <text x="816" y="186" text-anchor="middle" class="n-sub n-off">not called</text>
+              </g>
+            </g>
+            <g class="node node--cas">
+              <rect x="372" y="242" width="216" height="80" rx="18"/>
+              <text x="480" y="278" text-anchor="middle" class="n-title">cassette.json</text>
+              <text x="480" y="301" text-anchor="middle" class="n-sub" data-flow-cas>writing 3 interactions…</text>
+            </g>
+
+            <!-- packets: record -->
+            <g class="packets packets--record" filter="url(#glow)">
+              <circle r="6" class="pk pk--out"><animateMotion dur="2.4s" repeatCount="indefinite" begin="0s"><mpath href="#w-test-tomiko"/></animateMotion></circle>
+              <circle r="6" class="pk pk--out"><animateMotion dur="2.4s" repeatCount="indefinite" begin=".6s"><mpath href="#w-tomiko-api"/></animateMotion></circle>
+              <circle r="6" class="pk pk--in"><animateMotion dur="2.4s" repeatCount="indefinite" begin="1.2s"><mpath href="#w-api-back"/></animateMotion></circle>
+              <circle r="6" class="pk pk--in"><animateMotion dur="2.4s" repeatCount="indefinite" begin="1.8s"><mpath href="#w-tomiko-back"/></animateMotion></circle>
+              <circle r="5" class="pk pk--write"><animateMotion dur="1.2s" repeatCount="indefinite" begin="1.5s"><mpath href="#w-tomiko-cas"/></animateMotion></circle>
+            </g>
+            <!-- packets: replay -->
+            <g class="packets packets--replay" filter="url(#glow)">
+              <circle r="6" class="pk pk--out"><animateMotion dur=".9s" repeatCount="indefinite" begin="0s"><mpath href="#w-test-tomiko"/></animateMotion></circle>
+              <circle r="5" class="pk pk--play"><animateMotion dur=".9s" repeatCount="indefinite" begin=".3s"><mpath href="#w-cas-up"/></animateMotion></circle>
+              <circle r="6" class="pk pk--in"><animateMotion dur=".9s" repeatCount="indefinite" begin=".45s"><mpath href="#w-tomiko-back"/></animateMotion></circle>
+            </g>
+          </svg>
+
+
+          <svg class="flow__svg flow__svg--tall" viewBox="0 0 400 480" aria-hidden="true">
+            <defs>
+              <filter id="glow-m" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <path id="m-test-tomiko" class="wire" d="M194 84 V176"/>
+            <path id="m-tomiko-back" d="M206 176 V84" fill="none"/>
+            <path id="m-tomiko-api" class="wire wire--api" d="M150 246 V306 H95 V366"/>
+            <path id="m-api-back" d="M107 366 V318 H162 V246" fill="none"/>
+            <path id="m-tomiko-cas" class="wire wire--cas" d="M250 246 V306 H305 V366"/>
+            <path id="m-cas-up" d="M293 366 V318 H238 V246" fill="none"/>
+
+            <g class="node">
+              <rect x="105" y="12" width="190" height="72" rx="18"/>
+              <text x="200" y="44" text-anchor="middle" class="n-title">your test</text>
+              <text x="200" y="66" text-anchor="middle" class="n-sub">booking.test.ts</text>
+            </g>
+            <g class="node node--brand">
+              <rect x="105" y="176" width="190" height="72" rx="18"/>
+              <text x="200" y="208" text-anchor="middle" class="n-title">tomiko</text>
+              <text x="200" y="230" text-anchor="middle" class="n-sub" data-flow-sub>mode: auto</text>
+            </g>
+            <g class="node node--api">
+              <rect x="10" y="366" width="170" height="72" rx="18"/>
+              <text x="95" y="398" text-anchor="middle" class="n-title">LLM API</text>
+              <text x="95" y="420" text-anchor="middle" class="n-sub">anthropic.com</text>
+              <g class="api-off">
+                <line x1="24" y1="378" x2="166" y2="426"/>
+                <text x="95" y="464" text-anchor="middle" class="n-sub n-off">not called</text>
+              </g>
+            </g>
+            <g class="node node--cas">
+              <rect x="220" y="366" width="170" height="72" rx="18"/>
+              <text x="305" y="398" text-anchor="middle" class="n-title">cassette.json</text>
+              <text x="305" y="420" text-anchor="middle" class="n-sub" data-flow-cas-short>recording…</text>
+            </g>
+
+            <g class="packets packets--record" filter="url(#glow-m)">
+              <circle r="6" class="pk pk--out"><animateMotion dur="2.4s" repeatCount="indefinite" begin="0s"><mpath href="#m-test-tomiko"/></animateMotion></circle>
+              <circle r="6" class="pk pk--out"><animateMotion dur="2.4s" repeatCount="indefinite" begin=".6s"><mpath href="#m-tomiko-api"/></animateMotion></circle>
+              <circle r="6" class="pk pk--in"><animateMotion dur="2.4s" repeatCount="indefinite" begin="1.2s"><mpath href="#m-api-back"/></animateMotion></circle>
+              <circle r="6" class="pk pk--in"><animateMotion dur="2.4s" repeatCount="indefinite" begin="1.8s"><mpath href="#m-tomiko-back"/></animateMotion></circle>
+              <circle r="5" class="pk pk--write"><animateMotion dur="1.2s" repeatCount="indefinite" begin="1.5s"><mpath href="#m-tomiko-cas"/></animateMotion></circle>
+            </g>
+            <g class="packets packets--replay" filter="url(#glow-m)">
+              <circle r="6" class="pk pk--out"><animateMotion dur=".9s" repeatCount="indefinite" begin="0s"><mpath href="#m-test-tomiko"/></animateMotion></circle>
+              <circle r="5" class="pk pk--play"><animateMotion dur=".9s" repeatCount="indefinite" begin=".3s"><mpath href="#m-cas-up"/></animateMotion></circle>
+              <circle r="6" class="pk pk--in"><animateMotion dur=".9s" repeatCount="indefinite" begin=".45s"><mpath href="#m-tomiko-back"/></animateMotion></circle>
+            </g>
+          </svg>
+
+          <div class="flow__facts">
+            <div class="fact"><span class="fact__k">time</span><b data-flow-time>seconds</b></div>
+            <div class="fact"><span class="fact__k">tokens</span><b data-flow-tokens>real</b></div>
+            <div class="fact"><span class="fact__k">network</span><b data-flow-net>on</b></div>
+            <div class="fact"><span class="fact__k">API key</span><b data-flow-key>required</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── STATS ───────────── -->
+    <section class="stats" aria-label="tomiko in numbers">
+      <div class="wrap stats__grid">
+        <div class="stat" data-reveal><b data-count="7">0</b><span>agent-aware matchers</span></div>
+        <div class="stat" data-reveal style="--d:.08s"><b data-count="6">0</b><span>failure modes on demand</span></div>
+        <div class="stat" data-reveal style="--d:.16s"><b data-count="4">0</b><span>SDKs, zero setup</span></div>
+        <div class="stat" data-reveal style="--d:.24s"><b data-count="0" data-static>0</b><span>runtime dependencies</span></div>
+      </div>
+    </section>
+
+    <!-- ───────────── FEATURES ───────────── -->
+    <section class="section features" id="features">
+      <div class="wrap">
+        <div class="section__head" data-reveal>
+          <span class="eyebrow">03 — Why tomiko</span>
+          <h2>HTTP recorders capture bytes. tomiko <em class="serif">reads the conversation.</em></h2>
+          <p>nock and Polly don't know what a tool call is. tomiko knows it's looking at LLM traffic — and tests it that way.</p>
+        </div>
+
+        <div class="cards">
+          <article class="card card--wide" data-reveal>
+            <div class="card__viz viz-stream" aria-hidden="true">
+              <span>event: message_start</span><span>event: content_block_start</span><span>event: content_block_delta</span><span>event: content_block_stop</span><span>event: message_stop</span>
+            </div>
+            <h3>Streams replay exactly</h3>
+            <p>SSE comes back chunk by chunk, so <code>stream()</code>, <code>finalMessage()</code> and streamed tool calls behave as they did live.</p>
+          </article>
+
+          <article class="card" data-reveal style="--d:.06s">
+            <div class="card__viz viz-tools" aria-hidden="true">
+              <span class="t1">search_tables</span><span class="arrow">→</span><span class="t2">book_table</span>
+            </div>
+            <h3>Assert behaviour, not strings</h3>
+            <p>Which tools ran, with what arguments, in what order, how many requests it took — and what it cost.</p>
+          </article>
+
+          <article class="card" data-reveal style="--d:.12s">
+            <div class="card__viz viz-faults" aria-hidden="true">
+              <i class="bad">429</i><i class="bad">529</i><i class="bad">500</i><i class="good">200</i>
+            </div>
+            <h3>Failures on demand</h3>
+            <p>Rate limits, overloads, dropped connections and slow responses — in each provider's real error format.</p>
+          </article>
+
+          <article class="card" data-reveal style="--d:.06s">
+            <div class="card__viz viz-diff" aria-hidden="true">
+              <span>right <del>now?</del><ins>now, in Celsius?</ins></span>
+            </div>
+            <h3>Diffs you can read</h3>
+            <p>Change a prompt and the failure shows the changed words — not two blobs of JSON.</p>
+          </article>
+
+          <article class="card" data-reveal style="--d:.12s">
+            <div class="card__viz viz-safe" aria-hidden="true">
+              <span>x-api-key: <s>sk-ant-•••••</s></span><span class="lock">never written</span>
+            </div>
+            <h3>Safe to commit</h3>
+            <p>API keys and request headers never touch disk. Secret query parameters are redacted.</p>
+          </article>
+
+          <article class="card card--wide" data-reveal style="--d:.18s">
+            <div class="card__viz viz-cost" aria-hidden="true">
+              <div><span class="k">tokens</span> 11.0K in · 1.9K out · 72.0K cache read</div>
+              <div><span class="k">cost&nbsp;&nbsp;</span> $0.0960 est. · <b>$0.0800 saved by replay</b></div>
+            </div>
+            <h3>Knows what it costs</h3>
+            <p>Usage is read from Anthropic and OpenAI responses, streamed or not. A model with no price is reported — never counted as free.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── FAULTS ───────────── -->
+    <section class="section faults" id="faults">
+      <div class="wrap faults__grid">
+        <div class="section__head section__head--left" data-reveal>
+          <span class="eyebrow">04 — Failure paths</span>
+          <h2>Live APIs rarely fail <em class="serif">on cue.</em><br>Recordings do.</h2>
+          <p>Inject a fault and the SDK throws its usual typed error, then retries right away instead of waiting out a real backoff. Pick one:</p>
+          <div class="fault-picker" role="radiogroup" aria-label="Fault type">
+            <button role="radio" aria-checked="true" data-fault="rateLimit">rateLimit</button>
+            <button role="radio" aria-checked="false" data-fault="overloaded">overloaded</button>
+            <button role="radio" aria-checked="false" data-fault="serverError">serverError</button>
+            <button role="radio" aria-checked="false" data-fault="networkError">networkError</button>
+            <button role="radio" aria-checked="false" data-fault="cutStream">cutStream</button>
+            <button role="radio" aria-checked="false" data-fault="latency">latency</button>
+          </div>
+        </div>
+
+        <div class="faultbox" data-reveal style="--d:.1s">
+          <pre class="faultbox__code"><code data-fault-code></code></pre>
+          <ol class="timeline" data-fault-timeline></ol>
+          <div class="faultbox__foot"><span class="led led--play"></span><span data-fault-result>test passed · your retry path works</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── DIFF ───────────── -->
+    <section class="section diff" id="diff">
+      <div class="wrap">
+        <div class="section__head" data-reveal>
+          <span class="eyebrow">05 — When a prompt changes</span>
+          <h2>You'll know <em class="serif">exactly</em> what changed.</h2>
+          <p>In <code>replay</code> mode a request with no recording fails with the closest one and a word-level diff. Re-record on purpose, or allow near matches with <code>fuzzy</code>.</p>
+        </div>
+        <div class="errorbox" data-reveal data-diff>
+          <div class="errorbox__head"><span class="x">✗</span> weather.test.ts › answers with the weather tool</div>
+          <pre><span class="e-red">RequestMismatchError:</span> No recorded interaction in cassette
+  "weather.test.ts/answers with the weather tool" matches
+  POST https://api.anthropic.com/v1/messages.
+
+<span class="e-dim">Closest recording</span> <b class="e-sim">(90% similar)</b> <span class="e-dim">differs in:</span>
+  <span class="e-tilde">~</span> messages[0].content: "…weather in Lisbon right <del class="d-del">now?</del><ins class="d-ins">now, in Celsius?</ins>"
+
+<span class="e-dim">If the change is intentional, re-record with</span> <span class="e-acc">TOMIKO_MODE=record</span><span class="e-dim">,
+or allow near matches with the</span> <span class="e-acc">fuzzy</span> <span class="e-dim">option.</span></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── VIEWER ───────────── -->
+    <section class="section viewer" id="viewer">
+      <div class="wrap">
+        <div class="section__head" data-reveal>
+          <span class="eyebrow">06 — See every run</span>
+          <h2>Every cassette, <em class="serif">as a conversation.</em></h2>
+          <p>System prompt, tool calls and results, the response — and the tokens, cost and time of each step. One HTML file, no server, ready to attach to a CI run.</p>
+          <button class="install install--inline" type="button" data-copy="npx tomiko view" aria-label="Copy viewer command">
+            <span class="install__prompt">$</span><code>npx tomiko view</code>
+            <span class="install__icon" aria-hidden="true">
+              <svg class="i-copy" viewBox="0 0 24 24" width="18" height="18"><rect x="9" y="9" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <svg class="i-ok" viewBox="0 0 24 24" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </button>
+        </div>
+
+        <div class="browser" data-tilt>
+          <div class="browser__bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <span class="browser__url">file:///…/tomiko-view.html</span>
+          </div>
+          <img src="assets/img/viewer-dark.png" width="1920" height="1230" loading="lazy" alt="tomiko view showing an agent run as a conversation, with tool calls, results and per-step cost">
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── CODE ───────────── -->
+    <section class="section code" id="code">
+      <div class="wrap code__grid">
+        <div class="section__head section__head--left" data-reveal>
+          <span class="eyebrow">07 — Quick start</span>
+          <h2>Three lines to <em class="serif">your first cassette.</em></h2>
+          <p>Wrap a test in <code>useCassette</code>. Run it once with a key. Commit <code>__cassettes__/</code>. That's the whole setup.</p>
+          <ol class="steps">
+            <li><b>Install</b> <code>npm i -D tomiko</code></li>
+            <li><b>Record</b> <code>ANTHROPIC_API_KEY=… npx vitest</code></li>
+            <li><b>Commit</b> <code>git add __cassettes__</code></li>
+            <li><b>Replay</b> forever — on CI, offline, for free</li>
+          </ol>
+          <a class="link-arrow" href="https://github.com/saykachi/tomiko#reference" target="_blank" rel="noopener">Full reference on GitHub <span>→</span></a>
+        </div>
+
+        <div class="editor" data-reveal style="--d:.1s">
+          <div class="editor__tabs" role="tablist" aria-label="Examples">
+            <button role="tab" aria-selected="true" data-tab="quick">booking.test.ts</button>
+            <button role="tab" aria-selected="false" data-tab="matchers">matchers.ts</button>
+            <button role="tab" aria-selected="false" data-tab="plain">no-vitest.ts</button>
+            <button role="tab" aria-selected="false" data-tab="client">client.ts</button>
+          </div>
+          <pre class="editor__body"><code data-editor></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── CTA ───────────── -->
+    <section class="cta">
+      <div class="cta__bg" aria-hidden="true"></div>
+      <div class="wrap cta__inner" data-reveal>
+        <h2>Stop paying for the<br><em class="serif">same tokens twice.</em></h2>
+        <p>Deterministic agent tests in one install.</p>
+        <div class="hero__actions hero__actions--center">
+          <button class="install install--big" type="button" data-copy="npm install --save-dev tomiko" aria-label="Copy install command">
+            <span class="install__prompt">$</span><code>npm install --save-dev tomiko</code>
+            <span class="install__icon" aria-hidden="true">
+              <svg class="i-copy" viewBox="0 0 24 24" width="18" height="18"><rect x="9" y="9" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <svg class="i-ok" viewBox="0 0 24 24" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </button>
+          <a class="btn btn--primary magnetic" href="https://github.com/saykachi/tomiko" target="_blank" rel="noopener">Star on GitHub ★</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <a class="logo" href="#top">tomiko<span>.</span></a>
+      <p>Record &amp; replay LLM calls in your tests. MIT licensed.</p>
+      <nav aria-label="Footer">
+        <a href="https://github.com/saykachi/tomiko" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.npmjs.com/package/tomiko" target="_blank" rel="noopener">npm</a>
+        <a href="https://github.com/saykachi/tomiko/issues" target="_blank" rel="noopener">Issues</a>
+      </nav>
+    </div>
+  </footer>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>

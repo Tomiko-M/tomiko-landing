@@ -269,22 +269,8 @@
     }, 0.6);
   });
 
-  /* ───────────── syntax highlighting ───────────── */
-  const TOKENS = /(\/\/[^\n]*)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'|`(?:[^`\\\n]|\\.)*`)|\b(import|from|export|const|let|await|async|return|new|function|true|false)\b|\b(\d+(?:\.\d+)?)\b|([A-Za-z_$][\w$]*)(?=\()/g;
-  const highlight = (src) => {
-    let html = "";
-    let last = 0;
-    for (const m of src.matchAll(TOKENS)) {
-      html += escape(src.slice(last, m.index));
-      const [text, comment, str, kw, num, fn] = m;
-      const cls = comment ? "c" : str ? "s" : kw ? "k" : num ? "n" : fn ? "f" : "";
-      html += `<span class="tk-${cls}">${escape(text)}</span>`;
-      last = m.index + text.length;
-    }
-    html += escape(src.slice(last));
-    return html;
-  };
-  const withLines = (html) => html.split("\n").map((l, i) => `<span class="ln">${i + 1}</span>${l}`).join("\n");
+  /* ───────────── syntax highlighting (assets/js/highlight.js) ───────────── */
+  const { highlight, withLines } = window.tomikoHL;
 
   /* ───────────── faults ───────────── */
   const FAULTS = {

@@ -1,0 +1,1324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Documentation — tomiko</title>
+  <meta name="description" content="Complete documentation for tomiko: record and replay LLM API calls in tests. Guides, API reference, options, matchers, faults, cost tracking and the cassette format.">
+  <meta name="theme-color" content="#0e0d0c">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="tomiko documentation">
+  <meta property="og:description" content="Guides and full API reference for tomiko: record & replay LLM calls in your tests.">
+  <meta property="og:image" content="assets/img/social-preview.png">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400..600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/docs.css">
+  <script>document.documentElement.classList.add("js")</script>
+</head>
+<body class="docs-body">
+  <div class="progress" aria-hidden="true"><span></span></div>
+
+  <header class="nav">
+    <div class="nav__inner">
+      <button class="menu-btn" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"><span></span></button>
+      <a class="logo" href="index.html" aria-label="tomiko home">tomiko<span>.</span></a>
+      <span class="nav__crumb"><b>docs</b> · v0.1</span>
+      <nav class="nav__links" aria-label="Site">
+        <a href="index.html">Home</a>
+        <a href="#quick-start">Quick start</a>
+        <a href="#api-cassette">API</a>
+        <a href="#troubleshooting">Troubleshooting</a>
+      </nav>
+      <div class="nav__cta">
+        <a class="nav__icon" href="https://www.npmjs.com/package/tomiko" target="_blank" rel="noopener" aria-label="tomiko on npm">npm</a>
+        <a class="btn btn--small btn--ghost" href="https://github.com/saykachi/tomiko" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="docs">
+    <!-- ───────────── SIDEBAR ───────────── -->
+    <aside class="sidebar" id="sidebar" aria-label="Documentation">
+      <div class="search">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input type="search" placeholder="Search docs" aria-label="Search documentation" data-search>
+        <kbd>/</kbd>
+      </div>
+
+      <div class="sidebar__group">
+        <p class="sidebar__title">Getting started</p>
+        <ul>
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#installation">Installation</a></li>
+          <li><a href="#quick-start">Quick start</a></li>
+          <li><a href="#how-it-works">How it works</a></li>
+        </ul>
+      </div>
+      <div class="sidebar__group">
+        <p class="sidebar__title">Guides</p>
+        <ul>
+          <li><a href="#vitest">Using with Vitest</a></li>
+          <li><a href="#other-runners">Jest &amp; other runners</a></li>
+          <li><a href="#sdks">SDKs &amp; clients</a></li>
+          <li><a href="#modes">Modes &amp; CI</a></li>
+          <li><a href="#matching">Request matching</a></li>
+          <li><a href="#assertions">Assertions</a></li>
+          <li><a href="#faults">Failure injection</a></li>
+          <li><a href="#streaming">Streaming</a></li>
+          <li><a href="#cost">Cost &amp; tokens</a></li>
+          <li><a href="#security">Security &amp; redaction</a></li>
+          <li><a href="#files">Cassette files</a></li>
+          <li><a href="#viewer">The viewer</a></li>
+        </ul>
+      </div>
+      <div class="sidebar__group">
+        <p class="sidebar__title">API reference</p>
+        <ul>
+          <li><a href="#api-cassette"><code>cassette()</code></a></li>
+          <li><a href="#api-open-cassette"><code>openCassette()</code></a></li>
+          <li><a href="#api-configure"><code>configure()</code></a></li>
+          <li><a href="#api-fetch"><code>fetch</code></a></li>
+          <li><a href="#api-class"><code>Cassette</code></a></li>
+          <li><a href="#api-vitest"><code>tomiko/vitest</code></a></li>
+          <li><a href="#api-fault"><code>fault</code></a></li>
+          <li><a href="#api-matchers"><code>matchers</code></a></li>
+          <li><a href="#api-reports">Reports</a></li>
+          <li><a href="#api-pricing">Pricing</a></li>
+          <li><a href="#api-errors">Errors</a></li>
+          <li><a href="#api-options"><code>TomikoOptions</code></a></li>
+          <li><a href="#api-types">Types</a></li>
+          <li><a href="#api-cli">CLI</a></li>
+        </ul>
+      </div>
+      <div class="sidebar__group">
+        <p class="sidebar__title">More</p>
+        <ul>
+          <li><a href="#recipes">Recipes</a></li>
+          <li><a href="#troubleshooting">Troubleshooting</a></li>
+        </ul>
+      </div>
+      <p class="sidebar__empty">Nothing matches. Try “fault”, “ci” or “cost”.</p>
+    </aside>
+    <div class="scrim" aria-hidden="true"></div>
+
+    <!-- ───────────── CONTENT ───────────── -->
+    <main class="content" id="content">
+
+<!-- ═════════════ INTRODUCTION ═════════════ -->
+<section id="introduction">
+  <div class="doc-hero">
+    <span class="eyebrow">Documentation · v0.1</span>
+    <h1>Everything tomiko <em class="serif">can do.</em></h1>
+    <p class="lede">tomiko records the real LLM traffic of your tests on the first run and replays it on every run after. This page covers every module, option, matcher, fault, type and command.</p>
+  </div>
+
+  <p>Testing code that calls a language model is awkward: real API calls are slow, cost money, need a key, and return a slightly different answer every time. Mocking them by hand is tedious and drifts away from what the API really sends.</p>
+  <p>tomiko takes the approach of HTTP recorders such as VCR, nock or Polly, but it understands LLM traffic:</p>
+  <ul>
+    <li><strong>Record &amp; replay.</strong> The first run sends real requests and writes them to a JSON <em>cassette</em> next to the test. Later runs answer from the file: no network, no key, no tokens, a few milliseconds.</li>
+    <li><strong>Streams replay exactly.</strong> Server-sent events are stored chunk by chunk and replayed the same way, so streaming SDK helpers behave as they did live.</li>
+    <li><strong>Behavioural assertions.</strong> Matchers read the cassette: which tools the model called, with which arguments, in which order, how many requests it took and what it cost.</li>
+    <li><strong>Failures on demand.</strong> Rate limits, overloads, server errors, dropped connections, cut streams and latency, in each provider's real error format.</li>
+    <li><strong>Readable diffs.</strong> When a prompt changes, the failure shows the changed words.</li>
+    <li><strong>Safe to commit.</strong> Request headers, and with them API keys, are never written to disk.</li>
+    <li><strong>No dependencies.</strong> It works on <code>fetch</code>, so it supports the Anthropic and OpenAI SDKs, the Vercel AI SDK, LangChain.js and anything else built on <code>fetch</code>.</li>
+  </ul>
+
+  <div class="doc-cards">
+    <a class="card-link" href="#quick-start"><b>Quick start</b><span>Your first recorded test in three steps.</span></a>
+    <a class="card-link" href="#how-it-works"><b>How it works</b><span>What happens to a request from start to finish.</span></a>
+    <a class="card-link" href="#assertions"><b>Assertions</b><span>Test what the agent did, not only what it said.</span></a>
+    <a class="card-link" href="#api-options"><b>All options</b><span>Every setting that <code>TomikoOptions</code> accepts.</span></a>
+  </div>
+</section>
+
+<!-- ═════════════ INSTALLATION ═════════════ -->
+<section id="installation">
+  <h2>Installation</h2>
+  <div class="code" data-lang="sh"><pre><code>npm install --save-dev tomiko
+# or
+pnpm add -D tomiko
+yarn add -D tomiko</code></pre></div>
+
+  <h3 id="requirements">Requirements</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>What</th><th>Version</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Node.js</td><td><code>&gt;= 20</code></td><td>Uses the built-in <code>fetch</code>, <code>Request</code>, <code>Response</code> and <code>ReadableStream</code>.</td></tr>
+      <tr><td>Vitest</td><td><code>&gt;= 1.0.0</code>, optional</td><td>Only needed for <code>tomiko/vitest</code>. Matcher types are declared for Vitest 5.</td></tr>
+      <tr><td>Runtime dependencies</td><td>none</td><td>tomiko has zero dependencies.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="entry-points">Entry points</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Import</th><th>Formats</th><th>Contains</th></tr></thead>
+    <tbody>
+      <tr><td><code>tomiko</code></td><td>ESM and CommonJS</td><td>The core: <code>cassette</code>, <code>openCassette</code>, <code>configure</code>, <code>fetch</code>, <code>fault</code>, <code>matchers</code>, reports, pricing, errors and every type.</td></tr>
+      <tr><td><code>tomiko/vitest</code></td><td>ESM</td><td><code>useCassette</code>, <code>setupCassettes</code>, <code>currentCassette</code>, <code>locateCassette</code>. Importing it registers the matchers on Vitest's <code>expect</code>.</td></tr>
+      <tr><td><code>npx tomiko</code></td><td>CLI</td><td>The <code>view</code> command, which builds an HTML page of your cassettes.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout callout--note"><span class="callout__icon">ℹ</span><div><p>All copies of tomiko in a process share one state on <code>globalThis</code> (under <code>Symbol.for("tomiko.runtime")</code>). The ESM and CJS builds and <code>tomiko/vitest</code> therefore see the same active cassette, defaults and reports.</p></div></div>
+</section>
+
+<!-- ═════════════ QUICK START ═════════════ -->
+<section id="quick-start">
+  <h2>Quick start</h2>
+  <p class="lead">Wrap a test in <code>useCassette</code>, run it once with a key, commit the cassette.</p>
+
+  <h3 id="qs-1">1. Write the test</h3>
+  <div class="code" data-lang="ts" data-title="booking.test.ts"><pre><code>import { expect, test } from "vitest";
+import { useCassette } from "tomiko/vitest";
+import { agent } from "./agent";
+
+test("books a table", async () =&gt; {
+  await useCassette(async (c) =&gt; {
+    const answer = await agent.run("Table for two at 7pm, by the window");
+
+    expect(answer).toContain("Booked");
+    expect(c).toHaveCalledTool("book_table", { guests: 2 });
+    expect(c).toCostLessThan(0.05);
+  });
+});</code></pre></div>
+
+  <h3 id="qs-2">2. Record it once</h3>
+  <div class="code" data-lang="sh"><pre><code>ANTHROPIC_API_KEY=sk-ant-... npx vitest run</code></pre></div>
+  <p>The requests go to the real API. tomiko saves every request and response to <code>__cassettes__/booking.test.ts/books-a-table.json</code>, next to the test file.</p>
+
+  <h3 id="qs-3">3. Commit and replay</h3>
+  <div class="code" data-lang="sh"><pre><code>git add __cassettes__
+ANTHROPIC_API_KEY=dummy npx vitest run   # replays in milliseconds, offline</code></pre></div>
+  <p>From now on the test replays the cassette. On CI (where <code>CI</code> is set) tomiko runs in <code>replay</code> mode and never touches the network: a request without a recording fails the test instead of calling the API.</p>
+  <div class="callout callout--warn"><span class="callout__icon">⚠</span><div><p>The Anthropic and OpenAI SDKs refuse to build a request without an API key, before tomiko can answer it. When replaying, set any value: <code>ANTHROPIC_API_KEY=dummy</code>. See <a href="#ts-auth">Troubleshooting</a>.</p></div></div>
+</section>
+
+<!-- ═════════════ HOW IT WORKS ═════════════ -->
+<section id="how-it-works">
+  <h2>How it works</h2>
+  <p>tomiko works at the <code>fetch</code> level. A cassette is a JSON file holding <em>interactions</em>, each a recorded request with its response. While a cassette is active, requests go through it:</p>
+  <ol class="lifecycle">
+    <li><strong>Open.</strong> The cassette resolves its <a href="#modes">mode</a> and its file path, and loads the file if it exists. In <code>record</code> mode the old file is ignored.</li>
+    <li><strong>Activate.</strong> <code>cassette()</code>, <code>useCassette()</code> and <code>setupCassettes()</code> replace <code>globalThis.fetch</code> with tomiko's dispatcher. <code>openCassette()</code> doesn't touch globals: you pass <code>c.fetch</code> to your client yourself.</li>
+    <li><strong>Intercept.</strong> Each request becomes a <code>RecordedRequest</code>: method, URL with secret query parameters redacted, and parsed JSON body. Requests rejected by <code>intercept</code> go straight to the network.</li>
+    <li><strong>Faults.</strong> Any <a href="#faults">simulated failures</a> that target this request apply first. A faulted request never reaches the network and is never recorded.</li>
+    <li><strong>Match.</strong> Outside <code>record</code> mode, tomiko looks for a recording with the same method, URL and body (see <a href="#matching">matching</a>). If one matches, its response is replayed.</li>
+    <li><strong>Record or fail.</strong> With no match, <code>auto</code> and <code>record</code> modes send the request to the network and record the response. <code>replay</code> mode throws a <code>RequestMismatchError</code> showing the closest recording.</li>
+    <li><strong>Close.</strong> tomiko restores <code>fetch</code>, waits for streams still recording, applies <code>redact</code>, saves the file if anything new was recorded, and builds a <a href="#api-reports">report</a>.</li>
+  </ol>
+  <p>The response your code receives is a normal <code>Response</code>: same status, the kept headers, the same body. Streams arrive chunk by chunk, so SDKs cannot tell a replay from the real API.</p>
+</section>
+
+<!-- ═════════════ VITEST ═════════════ -->
+<section id="vitest">
+  <h2>Using with Vitest</h2>
+  <p>Import from <code>tomiko/vitest</code>. Importing it also registers the <a href="#assertions">matchers</a> on <code>expect</code>, with their types (Vitest 5).</p>
+
+  <h3 id="use-cassette">One cassette per test: <code>useCassette</code></h3>
+  <div class="code" data-lang="ts"><pre><code>import { useCassette } from "tomiko/vitest";
+
+describe("booking agent", () =&gt; {
+  test("books a window table", async () =&gt; {
+    await useCassette(async (c) =&gt; {
+      await agent.run("Window table for two at 7pm");
+      expect(c).toHaveCalledTool("book_table");
+    });
+  });
+});</code></pre></div>
+  <p>The cassette is named after the test, like a Vitest snapshot. Each <code>describe</code> block becomes a directory:</p>
+  <div class="code" data-lang="sh"><pre><code>test/booking.test.ts
+test/__cassettes__/booking.test.ts/booking-agent/books-a-window-table.json</code></pre></div>
+  <p>The function's return value is passed through: <code>const answer = await useCassette(() =&gt; agent.run(...))</code>.</p>
+
+  <h3 id="suffix">Several cassettes in one test</h3>
+  <p>Pass a suffix as the first argument. Each call gets its own file:</p>
+  <div class="code" data-lang="ts"><pre><code>test("remembers the conversation", async () =&gt; {
+  await useCassette("first turn", () =&gt; chat.send("My name is Ana"));
+  await useCassette("second turn", async (c) =&gt; {
+    const reply = await chat.send("What is my name?");
+    expect(reply).toMatch(/Ana/);
+  });
+});
+// → remembers-the-conversation/first-turn.json
+// → remembers-the-conversation/second-turn.json</code></pre></div>
+
+  <h3 id="setup-cassettes">Every test gets a cassette: <code>setupCassettes</code></h3>
+  <p>To give every test a cassette without wrapping each one, call <code>setupCassettes()</code> in a setup file. It registers a <code>beforeEach</code> that opens and activates a cassette named after the test, and an <code>afterEach</code> that closes it.</p>
+  <div class="code" data-lang="ts" data-title="vitest.setup.ts"><pre><code>import { configure } from "tomiko";
+import { setupCassettes } from "tomiko/vitest";
+
+configure({ ignore: ["metadata.user_id"] }); // optional defaults
+setupCassettes();</code></pre></div>
+  <div class="code" data-lang="ts" data-title="vitest.config.ts"><pre><code>import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  test: { setupFiles: ["./vitest.setup.ts"] },
+});</code></pre></div>
+  <p>Then read the current cassette in a test with <code>currentCassette()</code>:</p>
+  <div class="code" data-lang="ts"><pre><code>import { currentCassette } from "tomiko/vitest";
+
+test("searches before booking", async () =&gt; {
+  await agent.run("Table for two");
+  expect(currentCassette()).toHaveCalledToolsInOrder(["search_tables", "book_table"]);
+});</code></pre></div>
+  <ul>
+    <li>A test that makes no requests leaves no file behind.</li>
+    <li>Call <code>setupCassettes()</code> inside a <code>describe</code> block to cover only that block.</li>
+    <li>It takes the same <a href="#api-options">options</a>, merged over <code>configure()</code> defaults.</li>
+    <li>Don't use <code>useCassette()</code> inside a test that <code>setupCassettes()</code> already covers: cassettes don't nest.</li>
+  </ul>
+
+  <h3 id="cassette-location">Where cassettes live</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Setup</th><th>Path</th></tr></thead>
+    <tbody>
+      <tr><td>default</td><td><code>&lt;test dir&gt;/__cassettes__/&lt;test file&gt;/&lt;describe…&gt;/&lt;test&gt;.json</code></td></tr>
+      <tr><td><code>dir</code> option set</td><td><code>&lt;dir&gt;/&lt;test file path relative to cwd&gt;/&lt;describe…&gt;/&lt;test&gt;.json</code></td></tr>
+      <tr><td>with a suffix</td><td>the same, plus <code>/&lt;suffix&gt;.json</code> under the test's name</td></tr>
+    </tbody>
+  </table></div>
+  <p>Names are made safe for the file system: characters other than letters (in any script), digits, <code>_</code>, <code>.</code> and <code>-</code> become <code>-</code>, so <code>"books a table"</code> becomes <code>books-a-table</code>. A <code>/</code> inside a test name becomes <code>-</code>, and <code>..</code> can't escape the directory.</p>
+
+  <h3 id="concurrency">Concurrency</h3>
+  <div class="callout callout--warn"><span class="callout__icon">⚠</span><div><p><code>useCassette()</code> and <code>setupCassettes()</code> patch the global <code>fetch</code>, and only one cassette can be active at a time, so they don't work with <code>test.concurrent</code>. Vitest's default parallelism across files is fine: each test file runs in its own worker.</p><p>For concurrent code inside one test, use <a href="#api-open-cassette"><code>openCassette()</code></a> and give each client its own <code>c.fetch</code>.</p></div></div>
+
+  <h3 id="vitest-types">Matcher types on older Vitest</h3>
+  <p>The types are declared for Vitest 5. On older versions, add the declaration yourself using the exported <code>TomikoMatchers</code> interface, following your version's custom matcher docs. For example:</p>
+  <div class="code" data-lang="ts" data-title="tomiko.d.ts"><pre><code>import type { TomikoMatchers } from "tomiko";
+
+declare module "vitest" {
+  interface Assertion&lt;T = any&gt; extends TomikoMatchers&lt;T&gt; {}
+}</code></pre></div>
+</section>
+
+<!-- ═════════════ OTHER RUNNERS ═════════════ -->
+<section id="other-runners">
+  <h2>Jest &amp; other runners</h2>
+  <p>The core <code>tomiko</code> entry has no test runner dependency. It works in Jest, <code>node:test</code>, Mocha, a plain script, or any other runner.</p>
+
+  <h3 id="with-cassette"><code>cassette(name, fn)</code></h3>
+  <div class="code" data-lang="ts"><pre><code>import { cassette } from "tomiko";
+
+const answer = await cassette("support/refund", async (c) =&gt; {
+  return agent.run("I want a refund");
+});
+// → __cassettes__/support/refund.json (relative to the working directory)</code></pre></div>
+  <p>While <code>fn</code> runs, <code>globalThis.fetch</code> goes through the cassette. Then <code>fetch</code> is restored and new recordings are saved. Slashes in the name create subdirectories.</p>
+
+  <h3 id="jest">Jest</h3>
+  <p>Register the matchers yourself, in a setup file:</p>
+  <div class="code" data-lang="ts" data-title="jest.setup.ts"><pre><code>import { matchers, type TomikoMatchers } from "tomiko";
+
+expect.extend(matchers);
+
+declare global {
+  namespace jest {
+    interface Matchers&lt;R&gt; extends TomikoMatchers&lt;R&gt; {}
+  }
+}</code></pre></div>
+  <div class="code" data-lang="ts" data-title="refund.test.ts"><pre><code>import { cassette } from "tomiko";
+
+test("refunds a damaged order", async () =&gt; {
+  await cassette("refund/damaged-order", async (c) =&gt; {
+    await agent.run("My order arrived broken");
+    expect(c).toHaveCalledTool("issue_refund");
+  });
+});</code></pre></div>
+  <p>Use the Node test environment (<code>testEnvironment: "node"</code>), which has the global <code>fetch</code>.</p>
+
+  <h3 id="node-test"><code>node:test</code></h3>
+  <div class="code" data-lang="ts"><pre><code>import { test } from "node:test";
+import assert from "node:assert/strict";
+import { cassette } from "tomiko";
+
+test("answers opening hours", async () =&gt; {
+  await cassette("faq/opening-hours", async (c) =&gt; {
+    const answer = await agent.run("When do you open?");
+    assert.match(answer, /9/);
+    assert.equal(c.calls.length, 1);
+  });
+});</code></pre></div>
+</section>
+
+<!-- ═════════════ SDKS ═════════════ -->
+<section id="sdks">
+  <h2>SDKs &amp; clients</h2>
+  <p>Anything that sends requests with <code>fetch</code> works. These integrations are covered by tomiko's own tests, which record against a fake API, replay offline and require identical results:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Library</th><th>Tested</th><th>Setup</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Anthropic SDK</strong></td><td>messages, streaming, tools, errors and retries</td><td>none¹</td></tr>
+      <tr><td><strong>OpenAI SDK</strong></td><td>Chat Completions, Responses, streaming, tools, retries</td><td>none¹</td></tr>
+      <tr><td><strong>Vercel AI SDK</strong></td><td><code>generateText</code> tool loops, <code>streamText</code></td><td>none</td></tr>
+      <tr><td><strong>LangChain.js</strong></td><td><code>ChatAnthropic</code>, <code>ChatOpenAI</code>, bound tools</td><td>none²</td></tr>
+      <tr><td><strong>Anything on <code>fetch</code></strong></td><td>any HTTP API</td><td>none</td></tr>
+    </tbody>
+  </table></div>
+  <p>¹ For a client created at module load, pass <code>fetch</code> from tomiko (below). ² If the model may be called before any test runs, pass <code>fetch</code> the same way.</p>
+
+  <h3 id="module-clients">Clients created before a test</h3>
+  <p>The Anthropic and OpenAI SDKs capture <code>fetch</code> when a client is constructed. A client built inside a test picks up tomiko automatically. A client built once at module load captured the real <code>fetch</code> before any cassette existed, so give it tomiko's:</p>
+  <div class="code" data-lang="ts" data-title="clients.ts"><pre><code>import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
+import { fetch } from "tomiko";
+
+export const anthropic = new Anthropic({ fetch });
+export const openai = new OpenAI({ fetch });</code></pre></div>
+  <p>tomiko's <code>fetch</code> sends each call to whichever cassette is active at that moment, and to the real network when none is. It is safe to leave in production code.</p>
+
+  <h3 id="sdk-anthropic">Anthropic SDK</h3>
+  <div class="code" data-lang="ts"><pre><code>import Anthropic from "@anthropic-ai/sdk";
+
+await useCassette(async (c) =&gt; {
+  const client = new Anthropic(); // created inside: nothing to configure
+  const stream = client.messages.stream({ model: "claude-opus-5-5", max_tokens: 512, messages });
+  const message = await stream.finalMessage();
+});</code></pre></div>
+
+  <h3 id="sdk-openai">OpenAI SDK</h3>
+  <div class="code" data-lang="ts"><pre><code>import OpenAI from "openai";
+
+await useCassette(async (c) =&gt; {
+  const client = new OpenAI();
+  const res = await client.responses.create({ model: "gpt-5", input: "Hi" });
+  expect(c).toHaveUsedModel("gpt-5");
+});</code></pre></div>
+  <div class="callout callout--note"><span class="callout__icon">ℹ</span><div><p>The built-in price table only has Anthropic models. To use <code>toCostLessThan</code> with OpenAI or other providers, add their prices with the <a href="#cost"><code>pricing</code></a> option.</p></div></div>
+
+  <h3 id="sdk-vercel">Vercel AI SDK</h3>
+  <p>The AI SDK looks up <code>globalThis.fetch</code> on every request, so even a provider created at module load works without setup:</p>
+  <div class="code" data-lang="ts"><pre><code>import { createAnthropic } from "@ai-sdk/anthropic";
+import { generateText, stepCountIs, tool } from "ai";
+
+const anthropic = createAnthropic();
+
+test("plans a trip with tools", async () =&gt; {
+  await useCassette(async (c) =&gt; {
+    await generateText({
+      model: anthropic("claude-opus-5-5"),
+      tools: { getWeather },
+      stopWhen: stepCountIs(5),
+      prompt: "Weather in Faro?",
+    });
+    expect(c).toHaveCalledTool("getWeather", { city: "Faro" });
+  });
+});</code></pre></div>
+
+  <h3 id="sdk-langchain">LangChain.js</h3>
+  <p>LangChain builds its SDK client lazily and caches it. A client built during a test keeps working in later tests because tomiko's global <code>fetch</code> routes to the cassette active at call time. If the model may be called before any test, pass <code>fetch</code> explicitly:</p>
+  <div class="code" data-lang="ts"><pre><code>import { ChatAnthropic } from "@langchain/anthropic";
+import { ChatOpenAI } from "@langchain/openai";
+import { fetch } from "tomiko";
+
+const claude = new ChatAnthropic({ model: "claude-opus-5-5", clientOptions: { fetch } });
+const gpt = new ChatOpenAI({ model: "gpt-5", configuration: { fetch } });</code></pre></div>
+
+  <h3 id="sdk-fetch">Plain <code>fetch</code> and other APIs</h3>
+  <p>Any <code>fetch</code> call is recorded, LLM or not. JSON, text, SSE and binary bodies are all supported. To record only some hosts, use <a href="#api-options"><code>intercept</code></a>:</p>
+  <div class="code" data-lang="ts"><pre><code>await cassette("weather", run, {
+  intercept: (request) =&gt; new URL(request.url).hostname === "api.anthropic.com",
+});</code></pre></div>
+
+  <h3 id="providers">Provider detection</h3>
+  <p>tomiko detects the provider to choose error formats for faults, and to read usage and tool calls. It checks, in order: the <code>anthropic-version</code> request header; a host ending in <code>anthropic.com</code>, <code>openai.com</code> or <code>generativelanguage.googleapis.com</code>; a path ending in <code>/v1/messages</code> (Anthropic) or <code>/chat/completions</code> / <code>/responses</code> (OpenAI). That last check makes proxies and gateways with a custom base URL work too.</p>
+</section>
+
+<!-- ═════════════ MODES ═════════════ -->
+<section id="modes">
+  <h2>Modes &amp; CI</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Mode</th><th>A recording matches</th><th>No recording matches</th><th>Default when</th></tr></thead>
+    <tbody>
+      <tr><td><code>auto</code></td><td>replayed</td><td>sent to the API and recorded</td><td>running locally</td></tr>
+      <tr><td><code>replay</code></td><td>replayed</td><td>the test fails, nothing is sent</td><td><code>CI</code> is set</td></tr>
+      <tr><td><code>record</code></td><td>ignored</td><td>everything is re-recorded</td><td>never</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="mode-resolution">How the mode is chosen</h3>
+  <ol>
+    <li>The <code>TOMIKO_MODE</code> environment variable, if set. It wins over everything, so a whole suite can be re-recorded without code changes.</li>
+    <li>The <code>mode</code> option, from the cassette call or from <code>configure()</code>.</li>
+    <li><code>replay</code> when <code>CI</code> is set to anything other than empty, <code>0</code> or <code>false</code>.</li>
+    <li>Otherwise <code>auto</code>.</li>
+  </ol>
+  <p>The value is case-insensitive. An unknown mode throws <code>TomikoError</code>.</p>
+  <div class="code" data-lang="sh"><pre><code>TOMIKO_MODE=record npx vitest run                   # refresh every cassette
+TOMIKO_MODE=record npx vitest run -t "books a table" # refresh one test
+CI=1 npx vitest run                                  # check locally that CI will pass</code></pre></div>
+
+  <h3 id="mode-details">Details</h3>
+  <ul>
+    <li><strong>A missing cassette fails only when needed.</strong> In <code>replay</code> mode with no file, the test fails with <code>CassetteNotFoundError</code> only when it actually sends a request. Tests without LLM calls pass.</li>
+    <li><strong>Repeated requests.</strong> Identical requests are answered in the order they were recorded. When they run out, <code>auto</code> records a new one and <code>replay</code> repeats the last.</li>
+    <li><strong><code>auto</code> appends.</strong> New recordings are added to the existing file, so adding a step to an agent records only the new step.</li>
+    <li><strong><code>record</code> replaces.</strong> The old file is not loaded. After the run the file holds only this run's interactions.</li>
+  </ul>
+
+  <h3 id="ci">On CI</h3>
+  <div class="code" data-lang="yaml" data-title=".github/workflows/test.yml"><pre><code>- run: npm ci
+- run: npm test
+  env:
+    ANTHROPIC_API_KEY: dummy   # SDKs need some key; replay never sends it</code></pre></div>
+  <p>GitHub Actions and most CI services set <code>CI=true</code>, so tomiko runs in <code>replay</code> mode. A request without a recording fails the build and shows the closest recording, so a forgotten re-record can't call the paid API from CI.</p>
+</section>
+
+<!-- ═════════════ MATCHING ═════════════ -->
+<section id="matching">
+  <h2>Request matching</h2>
+  <p>A live request matches a recording when all of these are equal:</p>
+  <ul>
+    <li>the HTTP <strong>method</strong>;</li>
+    <li>the <strong>URL</strong>, after secret query parameters are redacted;</li>
+    <li>the <strong>body</strong>, compared as canonical JSON: object key order doesn't matter, array order does. Paths listed in <code>ignore</code> are removed first.</li>
+  </ul>
+  <p>Headers are not compared and not stored.</p>
+
+  <h3 id="ignore">Ignoring volatile fields: <code>ignore</code></h3>
+  <p>Leave out parts of the body that change between runs (ids, timestamps, cache markers). Paths are dot-separated, and <code>*</code> matches any key or array index:</p>
+  <div class="code" data-lang="ts"><pre><code>configure({
+  ignore: [
+    "metadata.user_id",           // one field
+    "messages.*.cache_control",   // the field in every message
+    "tools.*.input_schema.description",
+  ],
+});</code></pre></div>
+
+  <h3 id="mismatch">When nothing matches</h3>
+  <p>In <code>replay</code> mode, a request with no recording throws <code>RequestMismatchError</code>. tomiko looks for the most similar recording for the same method and URL, preferring ones not yet used in this run, and prints a leaf-by-leaf diff:</p>
+  <div class="code" data-lang="text"><pre><code>RequestMismatchError: No recorded interaction in cassette "agent/booking" matches POST https://api.anthropic.com/v1/messages.
+Closest recording (94% similar) differs in:
+  ~ system: "…for a small restaurant. [-Always-]{+Never+} confirm the time and…"
+  + temperature: 0.2
+  - metadata.user_id: "u_123"
+
+If the change is intentional, re-record with TOMIKO_MODE=record, or allow near matches with the `fuzzy` option.</code></pre></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Mark</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>~</code></td><td>changed. For strings, only the changed words are shown, as <code>[-old-]{+new+}</code> with a few words of context.</td></tr>
+      <tr><td><code>+</code></td><td>present in the live request only</td></tr>
+      <tr><td><code>-</code></td><td>present in the recording only</td></tr>
+    </tbody>
+  </table></div>
+  <p>Up to 12 differences are shown, and values are clipped at 120 characters. If nothing was ever recorded for that endpoint, the error says so instead.</p>
+
+  <h3 id="fuzzy">Near matches: <code>fuzzy</code></h3>
+  <p>With <code>fuzzy: 0.9</code>, a request at least 90% similar to a recording replays it, and the diff becomes a warning in the <a href="#api-reports">report</a>. This is useful while you iterate on prompt wording.</p>
+  <ul>
+    <li>Similarity is computed per JSON leaf and weighted by length, so a one-word edit in a long prompt barely moves the score, while a changed model name or tool does.</li>
+    <li>Strings are compared word by word (a Dice coefficient over words).</li>
+    <li>A recording from a <strong>different model</strong> is never used, however similar the prompt.</li>
+    <li>The value must be in <code>(0, 1]</code>, or <code>false</code> (the default) to turn it off.</li>
+  </ul>
+</section>
+
+<!-- ═════════════ ASSERTIONS ═════════════ -->
+<section id="assertions">
+  <h2>Assertions</h2>
+  <p>The matchers read the requests and responses the cassette served in this run, whether recorded or replayed. They work on any cassette: the one passed to your callback, <code>currentCassette()</code>, or one from <code>openCassette()</code>.</p>
+  <div class="code" data-lang="ts"><pre><code>expect(c).toHaveCalledTool("book_table", { guests: 2, table: expect.any(Number) });
+expect(c).toHaveCalledToolTimes("search_tables", 1);
+expect(c).toHaveCalledToolsInOrder(["search_tables", "book_table"]);
+expect(c).not.toHaveCalledTool("cancel_booking");
+expect(c).toHaveMadeRequests({ max: 5 });       // no runaway loops
+expect(c).toHaveUsedModel(/claude-opus/);
+expect(c).toCostLessThan(0.05);
+expect(c).toHaveUsedFewerTokensThan(20_000);</code></pre></div>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>Matcher</th><th>Passes when</th></tr></thead>
+    <tbody>
+      <tr><td><code>toHaveCalledTool(name, input?)</code></td><td>the model called the tool at least once. With <code>input</code>, at least one call's arguments must <em>contain</em> it.</td></tr>
+      <tr><td><code>toHaveCalledToolTimes(name, n)</code></td><td>the tool was called exactly <code>n</code> times</td></tr>
+      <tr><td><code>toHaveCalledToolsInOrder(names)</code></td><td>the tools were called in this relative order; other calls may come in between</td></tr>
+      <tr><td><code>toHaveMadeRequests(n | { min, max })</code></td><td>the number of requests is exactly <code>n</code>, or within the range (either bound optional)</td></tr>
+      <tr><td><code>toHaveUsedModel(model | RegExp)</code></td><td>at least one request used this model</td></tr>
+      <tr><td><code>toCostLessThan(usd)</code></td><td>the estimated cost is strictly below <code>usd</code></td></tr>
+      <tr><td><code>toHaveUsedFewerTokensThan(n)</code></td><td>input, output, cache read and cache write tokens add up to fewer than <code>n</code></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="contains">How <code>input</code> is compared</h3>
+  <p>For <code>toHaveCalledTool</code>, the expected <code>input</code> is matched as a <em>subset</em>: every key you give must be in the arguments with a matching value, and nested plain objects are compared the same way. Other values, including arrays, use your runner's equality, so asymmetric matchers work:</p>
+  <div class="code" data-lang="ts"><pre><code>expect(c).toHaveCalledTool("search", { query: expect.stringMatching(/lisbon/i) });
+expect(c).toHaveCalledTool("book_table", { guest: { name: "Ana" } }); // other keys allowed
+expect(c).toHaveCalledTool("tag", { labels: ["vip", "window"] });     // the array must be equal</code></pre></div>
+
+  <h3 id="failure-messages">Failure messages</h3>
+  <p>When a tool matcher fails, it lists what the agent did instead, with arguments shortened to 80 characters:</p>
+  <div class="code" data-lang="text"><pre><code>expected cassette "booking.test.ts/books a table" to call tool "cancel_booking".
+Tool calls:
+  search_tables({"time":"19:00","guests":2})
+  book_table({"table":12,"guests":2,"note":"window"})</code></pre></div>
+
+  <h3 id="what-counts">What counts</h3>
+  <ul>
+    <li><strong>Tool calls</strong> are read from Anthropic <code>tool_use</code>, <code>server_tool_use</code> and <code>mcp_tool_use</code> blocks, OpenAI Chat Completions <code>tool_calls</code> and Responses API <code>function_call</code> items, in both plain and streamed responses. Arguments streamed in fragments are reassembled.</li>
+    <li><strong>Requests</strong> include every request the cassette handled: retries and requests hit by a fault count too.</li>
+    <li><strong><code>toCostLessThan</code></strong> throws if a request has usage but no known price, instead of counting it as free. Add the model with the <a href="#cost"><code>pricing</code></a> option.</li>
+  </ul>
+
+  <h3 id="custom-assertions">Custom assertions with <code>c.calls</code></h3>
+  <p>For anything the matchers don't cover, read the raw data. <code>c.calls</code> is a list of <a href="#t-recorded-call"><code>RecordedCall</code></a>, one per request, in order. <code>c.toolCalls</code> is every tool call across them.</p>
+  <div class="code" data-lang="ts"><pre><code>await useCassette(async (c) =&gt; {
+  await agent.run("Table for two");
+
+  const last = c.calls.at(-1)!;
+  expect(last.text).toMatch(/booked/i);              // the final answer
+  expect(last.requestBody.system).toContain("restaurant");
+  expect(c.calls.every((call) =&gt; call.status === 200)).toBe(true);
+  expect(c.toolCalls.map((t) =&gt; t.name)).toEqual(["search_tables", "book_table"]);
+});</code></pre></div>
+</section>
+
+<!-- ═════════════ FAULTS ═════════════ -->
+<section id="faults">
+  <h2>Failure injection</h2>
+  <p>Live APIs rarely fail on cue. Faults let you test retry and error handling deterministically, on top of a normal recording:</p>
+  <div class="code" data-lang="ts"><pre><code>import { fault } from "tomiko";
+
+// 429, 429, then the recording
+await useCassette(run, { faults: [fault.rateLimit({ times: 2 })] });
+
+// the connection drops mid-stream
+await useCassette(run, { faults: [fault.cutStream({ afterEvents: 3 })] });</code></pre></div>
+  <p>A faulted request never reaches the network and is never recorded. Error responses use each provider's real format, so SDKs throw their usual typed errors (<code>RateLimitError</code>, <code>InternalServerError</code>, …) and retry as they would in production.</p>
+
+  <h3 id="fault-types">Fault types</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Factory</th><th>What happens</th><th>Options</th></tr></thead>
+    <tbody>
+      <tr><td><code>fault.rateLimit()</code></td><td>HTTP 429</td><td><code>retryAfterMs</code> (default <code>1</code>)</td></tr>
+      <tr><td><code>fault.overloaded()</code></td><td>HTTP 529 for Anthropic, 503 for other providers</td><td><code>retryAfterMs</code> (default <code>1</code>)</td></tr>
+      <tr><td><code>fault.serverError()</code></td><td>HTTP 500</td><td><code>retryAfterMs</code> (default <code>1</code>)</td></tr>
+      <tr><td><code>fault.networkError()</code></td><td><code>fetch</code> rejects before any response, like a reset connection: <code>TypeError: fetch failed</code> with a cause whose <code>code</code> is <code>ECONNRESET</code></td><td><code>message</code> (default <code>"read ECONNRESET"</code>)</td></tr>
+      <tr><td><code>fault.cutStream()</code></td><td>the response starts normally, then the connection drops. SSE streams are cut after <code>afterEvents</code> events; other bodies halfway. The body read fails with <code>TypeError: terminated</code>, as undici does.</td><td><code>afterEvents</code> (default <code>3</code>)</td></tr>
+      <tr><td><code>fault.latency({ ms })</code></td><td>delays the response by <code>ms</code>. Honours the request's abort signal, so client timeouts fire.</td><td><code>ms</code> (required)</td></tr>
+    </tbody>
+  </table></div>
+  <p>Error messages end with <code>(Simulated by tomiko)</code>, so they are easy to tell apart in logs.</p>
+
+  <h3 id="fault-format">Error bodies</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Fault</th><th>Anthropic</th><th>OpenAI and others</th></tr></thead>
+    <tbody>
+      <tr><td><code>rateLimit</code></td><td>429 · <code>rate_limit_error</code></td><td>429 · <code>requests</code> / <code>rate_limit_exceeded</code></td></tr>
+      <tr><td><code>overloaded</code></td><td>529 · <code>overloaded_error</code></td><td>503 · <code>server_error</code></td></tr>
+      <tr><td><code>serverError</code></td><td>500 · <code>api_error</code></td><td>500 · <code>server_error</code></td></tr>
+    </tbody>
+  </table></div>
+  <p>HTTP error faults send <code>retry-after-ms</code> and <code>retry-after</code> headers derived from <code>retryAfterMs</code>, so SDKs retry right away instead of waiting out a real backoff.</p>
+
+  <h3 id="fault-targeting">Choosing which requests fail</h3>
+  <p>Every factory accepts targeting options (<a href="#t-fault-target"><code>FaultTarget</code></a>):</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Option</th><th>Effect</th></tr></thead>
+    <tbody>
+      <tr><td><code>times</code></td><td>hit the first <code>times</code> requests that <code>when</code> accepts. Default <code>1</code>; <code>Infinity</code> hits all of them.</td></tr>
+      <tr><td><code>on</code></td><td>request numbers to hit, 1-based: a number or an array. It counts every request the cassette handles in this run, retries and faulted requests included. Takes precedence over <code>times</code>.</td></tr>
+      <tr><td><code>when</code></td><td><code>(request) =&gt; boolean</code>. Only requests it accepts are hit. It receives <code>{ method, url, body }</code>, with the URL redacted and the body parsed.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="code" data-lang="ts"><pre><code>fault.serverError({ on: [1, 3] });                     // requests 1 and 3
+fault.rateLimit({ times: Infinity });                   // every request
+fault.overloaded({ when: (r) =&gt; r.body?.model === "claude-opus-5-5", times: 2 });
+fault.networkError({ when: (r) =&gt; r.url.includes("/v1/messages") });</code></pre></div>
+
+  <h3 id="fault-combining">Combining faults</h3>
+  <p>Pass several faults in the array. Each keeps its own hit count. On one request: <code>latency</code> delays add up and apply first; then the first failing fault (<code>rateLimit</code>, <code>overloaded</code>, <code>serverError</code> or <code>networkError</code>) in declaration order answers the request; <code>cutStream</code> applies to responses that are actually served.</p>
+
+  <h3 id="fault-asserting">Asserting on faults</h3>
+  <p>Each <a href="#t-recorded-call"><code>RecordedCall</code></a> has a <code>fault</code> field naming the fault that hit it (<code>"rate_limit"</code>, <code>"overloaded"</code>, <code>"server_error"</code>, <code>"network_error"</code>, <code>"cut_stream"</code> or <code>"latency"</code>). A network error has <code>status: 0</code>.</p>
+  <div class="code" data-lang="ts"><pre><code>test("survives two rate limits in a row", async () =&gt; {
+  await useCassette(
+    async (c) =&gt; {
+      const answer = await askWeather("Porto");
+      expect(answer).toMatch(/sunny/i);
+      expect(c.calls.filter((call) =&gt; call.fault === "rate_limit")).toHaveLength(2);
+    },
+    { faults: [fault.rateLimit({ times: 2 })] },
+  );
+});
+
+test("gives up when the API stays overloaded", async () =&gt; {
+  await useCassette(
+    () =&gt; expect(askWeather("Porto")).rejects.toThrow(/overloaded/i),
+    { faults: [fault.overloaded({ times: Infinity })] },
+  );
+});</code></pre></div>
+  <div class="callout callout--tip"><span class="callout__icon">✦</span><div><p>Faults work even without a cassette file: a faulted request is answered before tomiko looks for a recording. A test that only checks failure paths needs no recording at all.</p></div></div>
+</section>
+
+<!-- ═════════════ STREAMING ═════════════ -->
+<section id="streaming">
+  <h2>Streaming</h2>
+  <p>Responses with <code>content-type: text/event-stream</code> are recorded as a list of chunks, exactly as they arrived, and replayed chunk by chunk. <code>stream()</code>, <code>finalMessage()</code>, <code>for await</code> loops, <code>streamText</code> and streamed tool calls behave as they did live.</p>
+  <ul>
+    <li><strong>Recorded while you read.</strong> While recording, tomiko passes the stream through to your code and copies each chunk as it is read. Your code sees the same bytes in the same chunks.</li>
+    <li><strong>Stopping early is fine.</strong> If your code stops reading (or never reads), the recording isn't cut short: <code>close()</code> drains the rest before saving.</li>
+    <li><strong>Failed streams aren't saved.</strong> A stream that fails while recording would replay truncated, so it is left out of the cassette and a warning is added to the report.</li>
+    <li><strong>Usage and tool calls</strong> are reassembled from the events: Anthropic <code>message_start</code> / <code>message_delta</code> / <code>input_json_delta</code>, OpenAI Chat <code>delta.tool_calls</code>, and the Responses API's final <code>response.completed</code>.</li>
+  </ul>
+  <p>To test a stream that breaks mid-way, use <a href="#fault-types"><code>fault.cutStream()</code></a>.</p>
+</section>
+
+<!-- ═════════════ COST ═════════════ -->
+<section id="cost">
+  <h2>Cost &amp; tokens</h2>
+  <p>tomiko reads token usage from every response, streamed or not, and estimates the cost from a price table.</p>
+
+  <h3 id="usage">Usage</h3>
+  <p>Usage is normalized across providers into four counters (<a href="#t-usage"><code>Usage</code></a>):</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Field</th><th>Anthropic</th><th>OpenAI</th></tr></thead>
+    <tbody>
+      <tr><td><code>inputTokens</code></td><td><code>input_tokens</code></td><td><code>prompt_tokens</code> / <code>input_tokens</code> <em>minus</em> cached tokens</td></tr>
+      <tr><td><code>outputTokens</code></td><td><code>output_tokens</code></td><td><code>completion_tokens</code> / <code>output_tokens</code></td></tr>
+      <tr><td><code>cacheReadTokens</code></td><td><code>cache_read_input_tokens</code></td><td><code>*_tokens_details.cached_tokens</code></td></tr>
+      <tr><td><code>cacheWriteTokens</code></td><td><code>cache_creation_input_tokens</code></td><td>0</td></tr>
+    </tbody>
+  </table></div>
+  <p><code>inputTokens</code> always means <em>uncached</em> input. For streams, counters are cumulative across events, so tomiko keeps the largest value of each.</p>
+
+  <h3 id="pricing">Prices</h3>
+  <p>Prices are in USD per million tokens. Anthropic list prices are built in (<code>defaultPricing</code>). Add or override entries with the <code>pricing</code> option, which is merged over the built-in table:</p>
+  <div class="code" data-lang="ts"><pre><code>configure({
+  pricing: {
+    "gpt-5": { input: 1.25, output: 10, cacheRead: 0.125 },
+    "my-fine-tune": { input: 2, output: 8 },
+  },
+});</code></pre></div>
+  <ul>
+    <li>A key matches a model id exactly, or as a <strong>prefix</strong>, with the longest key winning: <code>"claude-opus-5-5"</code> also prices <code>"claude-opus-5-5-20261001"</code>.</li>
+    <li>Bedrock's <code>anthropic.</code> prefix and Vertex's <code>@version</code> suffix are stripped before lookup.</li>
+    <li><code>cacheRead</code> defaults to 10% of <code>input</code>, and <code>cacheWrite</code> to 125% of <code>input</code>.</li>
+    <li>A model with no price is reported in <code>unpricedModels</code> and is <strong>never counted as free</strong>: <code>toCostLessThan</code> throws on it.</li>
+  </ul>
+  <div class="callout callout--warn"><span class="callout__icon">⚠</span><div><p>Prices change. The built-in table reflects Anthropic list prices as of October 2026. Override them if you need exact figures, or if your account has different rates.</p></div></div>
+
+  <h3 id="summary">Printing a summary</h3>
+  <p>Every cassette that served at least one request leaves a <a href="#api-reports">report</a>. <code>formatSummary()</code> turns them into text:</p>
+  <div class="code" data-lang="ts" data-title="vitest.setup.ts"><pre><code>import { afterAll } from "vitest";
+import { formatSummary, summary } from "tomiko";
+
+afterAll(() =&gt; {
+  if (summary().cassettes &gt; 0) console.log(formatSummary());
+});</code></pre></div>
+  <div class="code" data-lang="text"><pre><code>tomiko · 7 cassettes · 5 replayed · 1 recorded
+tokens · 11.0K in · 1.9K out · 72.0K cache read · 0 cache write
+cost  · $0.0960 est. · $0.0800 saved by replay</code></pre></div>
+  <p>Reports live in the process. Vitest runs each test file in its own worker, so a setup file's <code>afterAll</code> prints one summary per test file.</p>
+</section>
+
+<!-- ═════════════ SECURITY ═════════════ -->
+<section id="security">
+  <h2>Security &amp; redaction</h2>
+  <p>Cassettes are meant to be committed, so tomiko keeps secrets out of them by default:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Data</th><th>What is stored</th></tr></thead>
+    <tbody>
+      <tr><td>Request headers</td><td><strong>Never stored.</strong> That includes <code>x-api-key</code>, <code>authorization</code> and cookies.</td></tr>
+      <tr><td>Response headers</td><td>Only <code>content-type</code>, <code>retry-after</code>, <code>request-id</code> and <code>x-request-id</code>.</td></tr>
+      <tr><td>URL query parameters</td><td>Values of <code>key</code>, <code>api_key</code> / <code>api-key</code> / <code>apikey</code>, <code>access_token</code>, <code>token</code>, <code>auth</code>, <code>sig</code> and <code>signature</code> (any case) become <code>REDACTED</code>.</td></tr>
+      <tr><td>Request and response bodies</td><td>Stored as is.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="redact">Scrubbing bodies: <code>redact</code></h3>
+  <p>Bodies hold whatever your prompts and the model's answers hold, which may include personal data. <code>redact</code> receives each interaction just before it is written and returns the version to save:</p>
+  <div class="code" data-lang="ts"><pre><code>const EMAIL = /[\w.+-]+@[\w-]+\.[\w.]+/g;
+
+configure({
+  redact: (interaction) =&gt; {
+    const scrub = (v: unknown) =&gt; JSON.parse(JSON.stringify(v).replace(EMAIL, "user@example.com"));
+    interaction.request.body = scrub(interaction.request.body);
+    interaction.response.body = scrub(interaction.response.body);
+    return interaction;
+  },
+});</code></pre></div>
+  <ul>
+    <li>It receives a deep copy, so you can change it in place. Your test still sees the real values during this run.</li>
+    <li>It runs on <strong>every</strong> interaction in the file on each save, including ones recorded earlier, so it should give the same result when applied twice.</li>
+    <li>Redacted values are what later runs match against. If you rewrite something that's part of the request, replay will see a different body: prefer <code>ignore</code> for request fields that only need to be left out of matching.</li>
+  </ul>
+</section>
+
+<!-- ═════════════ FILES ═════════════ -->
+<section id="files">
+  <h2>Cassette files</h2>
+  <p>Plain, pretty-printed JSON, so a changed prompt shows up in code review next to the code that changed it:</p>
+  <div class="code" data-lang="json" data-title="__cassettes__/agent/booking.json"><pre><code>{
+  "version": 1,
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "body": { "model": "claude-opus-5-5", "max_tokens": 1024, "messages": [] }
+      },
+      "response": {
+        "status": 200,
+        "headers": { "content-type": "text/event-stream", "request-id": "req_…" },
+        "body": { "type": "sse", "chunks": ["event: message_start\ndata: {…}\n\n"] }
+      },
+      "meta": {
+        "provider": "anthropic",
+        "model": "claude-opus-5-5",
+        "usage": { "inputTokens": 120, "outputTokens": 42, "cacheReadTokens": 0, "cacheWriteTokens": 0 },
+        "recordedAt": "2026-10-11T09:30:00.000Z",
+        "durationMs": 1830
+      }
+    }
+  ]
+}</code></pre></div>
+
+  <h3 id="body-types">Response body types</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th><code>type</code></th><th>Used for</th><th>Field</th></tr></thead>
+    <tbody>
+      <tr><td><code>"json"</code></td><td>a JSON content type with a valid body</td><td><code>value</code>: the parsed JSON</td></tr>
+      <tr><td><code>"sse"</code></td><td><code>text/event-stream</code></td><td><code>chunks</code>: strings, in arrival order</td></tr>
+      <tr><td><code>"text"</code></td><td>other text types, or malformed JSON</td><td><code>value</code>: the raw text</td></tr>
+      <tr><td><code>"base64"</code></td><td>binary content (audio, images…)</td><td><code>value</code>: base64</td></tr>
+      <tr><td><code>"empty"</code></td><td>no body</td><td>none</td></tr>
+    </tbody>
+  </table></div>
+  <p>Request bodies are stored as parsed JSON when possible, otherwise as raw text.</p>
+
+  <h3 id="file-behaviour">Saving</h3>
+  <ul>
+    <li>A file is written only when the run recorded something new. Replaying never rewrites it.</li>
+    <li>Writes go to a temporary file and are then renamed, so an interrupted run never leaves a half-written cassette.</li>
+    <li>Loading checks <code>version: 1</code>; any other format throws <code>TomikoError</code>.</li>
+    <li>You can edit cassettes by hand, for example to shorten a long answer. Keep the request body as is, or the request won't match.</li>
+  </ul>
+  <div class="callout callout--tip"><span class="callout__icon">✦</span><div><p>Commit <code>__cassettes__/</code>. Re-record when you change a prompt, a tool or a model on purpose: <code>TOMIKO_MODE=record npx vitest run -t "&lt;test name&gt;"</code>.</p></div></div>
+</section>
+
+<!-- ═════════════ VIEWER ═════════════ -->
+<section id="viewer">
+  <h2>The viewer</h2>
+  <div class="code" data-lang="sh"><pre><code>npx tomiko view</code></pre></div>
+  <p>Builds a single HTML page from your cassettes and opens it in the browser: each cassette as a conversation, with the system prompt, tools, tool calls and results, the response, and the tokens, cost and time of each step. The page needs no server, so you can attach it to a CI run as an artifact.</p>
+  <ul>
+    <li>A sidebar lists every cassette with its request count, tokens and cost; filter it by path or model.</li>
+    <li>System prompts repeated from the previous request are collapsed, and so is conversation history already shown.</li>
+    <li>Raw request and response JSON are one click away.</li>
+    <li>Light and dark themes follow your system.</li>
+  </ul>
+  <p>All options are under <a href="#api-cli">CLI</a>.</p>
+</section>
+
+<!-- ═════════════ API: cassette ═════════════ -->
+<section id="api-cassette">
+  <h2><code>cassette()</code> <span class="badge">tomiko</span></h2>
+  <code class="signature">cassette&lt;T&gt;(name: string, fn: (cassette: Cassette) =&gt; T | Promise&lt;T&gt;, options?: TomikoOptions): Promise&lt;T&gt;</code>
+  <p>Runs <code>fn</code> with <code>globalThis.fetch</code> routed through the named cassette, then saves any new recordings and resolves with what <code>fn</code> returned.</p>
+  <div class="members">
+    <div class="member"><div class="member__name">name <span class="t">string</span></div><p>Cassette name, relative to <code>dir</code>. Slashes create subdirectories; <code>.json</code> is added.</p></div>
+    <div class="member"><div class="member__name">fn <span class="t">(cassette: Cassette) =&gt; T | Promise&lt;T&gt;</span></div><p>Your code. It receives the open <a href="#api-class"><code>Cassette</code></a>, for assertions.</p></div>
+    <div class="member"><div class="member__name">options <span class="opt">optional</span> <span class="t">TomikoOptions</span></div><p>Merged over the <code>configure()</code> defaults. See <a href="#api-options">options</a>.</p></div>
+  </div>
+  <ul>
+    <li>Throws <code>NestedCassetteError</code> if another cassette is active.</li>
+    <li><code>fetch</code> is restored even if <code>fn</code> throws. The cassette is closed either way, and if both <code>fn</code> and the save fail, the error from <code>fn</code> is the one thrown.</li>
+    <li>Clients that captured <code>fetch</code> before this call should use the exported <a href="#api-fetch"><code>fetch</code></a>.</li>
+  </ul>
+</section>
+
+<!-- ═════════════ API: openCassette ═════════════ -->
+<section id="api-open-cassette">
+  <h2><code>openCassette()</code> <span class="badge">tomiko</span></h2>
+  <code class="signature">openCassette(name: string, options?: TomikoOptions): Promise&lt;Cassette&gt;</code>
+  <p>Opens a cassette <strong>without touching globals</strong>. Pass <code>c.fetch</code> to a client and call <code>await c.close()</code> when done, to save recordings and produce the report.</p>
+  <div class="code" data-lang="ts"><pre><code>import Anthropic from "@anthropic-ai/sdk";
+import { openCassette } from "tomiko";
+
+const c = await openCassette("support/refund");
+try {
+  const client = new Anthropic({ fetch: c.fetch });
+  await runAgent(client);
+  expect(c).toHaveCalledTool("issue_refund");
+} finally {
+  await c.close();
+}</code></pre></div>
+  <p>Use it for concurrent work (each cassette has its own <code>fetch</code>, so several can be open at once), for long-lived clients, or when you don't want the global <code>fetch</code> patched.</p>
+</section>
+
+<!-- ═════════════ API: configure ═════════════ -->
+<section id="api-configure">
+  <h2><code>configure()</code> &amp; <code>resetConfig()</code> <span class="badge">tomiko</span></h2>
+  <code class="signature">configure(options: TomikoOptions): void
+resetConfig(): void</code>
+  <p><code>configure</code> sets defaults for every cassette opened afterwards. It's usually called once in a setup file. Calls accumulate: each one is merged over the previous defaults, and <code>pricing</code> tables are merged key by key. Options passed to a single cassette are merged over these defaults.</p>
+  <p><code>resetConfig</code> clears all defaults.</p>
+  <div class="code" data-lang="ts"><pre><code>configure({
+  fuzzy: 0.95,
+  ignore: ["metadata.user_id"],
+  pricing: { "gpt-5": { input: 1.25, output: 10 } },
+});</code></pre></div>
+</section>
+
+<!-- ═════════════ API: fetch ═════════════ -->
+<section id="api-fetch">
+  <h2><code>fetch</code> <span class="badge">tomiko</span></h2>
+  <code class="signature">const fetch: typeof globalThis.fetch</code>
+  <p>A stable <code>fetch</code> that routes each call to whichever cassette is active <em>at call time</em>, and to the real network when none is. Hand it to clients created once at module load: <code>new Anthropic({ fetch })</code>. See <a href="#module-clients">Clients created before a test</a>.</p>
+  <p>It is the same function tomiko installs as <code>globalThis.fetch</code> while a cassette is active. When no cassette is active, it calls the <code>fetch</code> that was global when tomiko loaded, so it never loops back into itself.</p>
+</section>
+
+<!-- ═════════════ API: Cassette ═════════════ -->
+<section id="api-class">
+  <h2><code>Cassette</code> <span class="badge">class</span></h2>
+  <p>An open cassette. You get one from <code>cassette()</code>, <code>useCassette()</code>, <code>openCassette()</code> or <code>currentCassette()</code>.</p>
+  <div class="members">
+    <div class="member"><div class="member__name">name <span class="t">readonly string</span></div><p>The name it was opened with.</p></div>
+    <div class="member"><div class="member__name">file <span class="t">readonly string</span></div><p>Absolute path of the JSON file.</p></div>
+    <div class="member"><div class="member__name">mode <span class="t">readonly Mode</span></div><p>The resolved mode: <code>"auto"</code>, <code>"replay"</code> or <code>"record"</code>.</p></div>
+    <div class="member"><div class="member__name">fetch <span class="t">readonly typeof fetch</span></div><p>A <code>fetch</code> bound to this cassette. Pass it to clients when using <code>openCassette()</code>.</p></div>
+    <div class="member"><div class="member__name">calls <span class="t">RecordedCall[]</span></div><p>Requests served so far in this run, recorded or replayed, in order. Read live: a stream still being recorded contributes everything your code has read from it. See <a href="#t-recorded-call"><code>RecordedCall</code></a>.</p></div>
+    <div class="member"><div class="member__name">toolCalls <span class="t">ToolCall[]</span></div><p>Every tool call the model made in this run, in order.</p></div>
+    <div class="member"><div class="member__name">closed <span class="t">boolean</span></div><p><code>true</code> after <code>close()</code>.</p></div>
+    <div class="member"><div class="member__name">close() <span class="t">Promise&lt;CassetteReport&gt;</span></div><p>Waits for in-flight stream recordings, applies <code>redact</code>, saves new recordings, and returns the <a href="#t-cassette-report">report</a>. Safe to call twice: it returns the same report. A closed cassette rejects new requests.</p></div>
+    <div class="member"><div class="member__name">static open(name, options?) <span class="t">Promise&lt;Cassette&gt;</span></div><p>Low level: opens a cassette with exactly these options, without the <code>configure()</code> defaults. Prefer <code>openCassette()</code>.</p></div>
+  </div>
+</section>
+
+<!-- ═════════════ API: vitest ═════════════ -->
+<section id="api-vitest">
+  <h2><code>tomiko/vitest</code> <span class="badge">module</span></h2>
+  <p>Importing this module registers the matchers on Vitest's <code>expect</code> and declares their types.</p>
+
+  <h3 id="api-use-cassette"><code>useCassette()</code></h3>
+  <code class="signature">useCassette&lt;T&gt;(fn: (c: Cassette) =&gt; T | Promise&lt;T&gt;, options?: TomikoOptions): Promise&lt;T&gt;
+useCassette&lt;T&gt;(suffix: string, fn: (c: Cassette) =&gt; T | Promise&lt;T&gt;, options?: TomikoOptions): Promise&lt;T&gt;</code>
+  <p>Like <code>cassette()</code>, but named after the running test and stored next to the test file. The <code>suffix</code> adds one more path segment, for several cassettes in one test. Throws <code>TomikoError</code> if called outside a running test.</p>
+
+  <h3 id="api-setup-cassettes"><code>setupCassettes()</code></h3>
+  <code class="signature">setupCassettes(options?: TomikoOptions): void</code>
+  <p>Registers <code>beforeEach</code> / <code>afterEach</code> hooks that give every test in scope its own cassette, named after the test. Call it at the top of a setup file for the whole suite, or inside a <code>describe</code> block. It throws if a cassette is still active when a test starts (for example with concurrent tests, or <code>useCassette()</code> in the same test).</p>
+
+  <h3 id="api-current-cassette"><code>currentCassette()</code></h3>
+  <code class="signature">currentCassette(): Cassette</code>
+  <p>The active cassette: the one <code>setupCassettes()</code> attached to the running test, or the one an enclosing <code>useCassette()</code> opened. Throws <code>TomikoError</code> if none is active.</p>
+
+  <h3 id="api-locate-cassette"><code>locateCassette()</code></h3>
+  <code class="signature">locateCassette(testPath: string, testName: string, dir?: string): { dir: string; name: string }</code>
+  <p>The <code>dir</code> and <code>name</code> a test's cassette uses (see <a href="#cassette-location">Where cassettes live</a>). Vitest joins <code>describe</code> names and the test name with <code>" &gt; "</code>, and each part becomes a directory level. Useful for tooling that needs to find a test's file.</p>
+</section>
+
+<!-- ═════════════ API: fault ═════════════ -->
+<section id="api-fault">
+  <h2><code>fault</code> <span class="badge">tomiko</span></h2>
+  <p>Factories for simulated failures. Pass the results in the <code>faults</code> option. Each accepts the <a href="#t-fault-target"><code>FaultTarget</code></a> options <code>on</code>, <code>times</code> and <code>when</code>.</p>
+  <code class="signature">fault.rateLimit(options?: FaultTarget &amp; { retryAfterMs?: number }): Fault
+fault.overloaded(options?: FaultTarget &amp; { retryAfterMs?: number }): Fault
+fault.serverError(options?: FaultTarget &amp; { retryAfterMs?: number }): Fault
+fault.networkError(options?: FaultTarget &amp; { message?: string }): Fault
+fault.cutStream(options?: FaultTarget &amp; { afterEvents?: number }): Fault
+fault.latency(options: FaultTarget &amp; { ms: number }): Fault</code>
+  <p>Behaviour and defaults are described in <a href="#faults">Failure injection</a>.</p>
+</section>
+
+<!-- ═════════════ API: matchers ═════════════ -->
+<section id="api-matchers">
+  <h2><code>matchers</code> &amp; <code>TomikoMatchers</code> <span class="badge">tomiko</span></h2>
+  <code class="signature">const matchers: { toHaveCalledTool, toHaveCalledToolTimes, toHaveCalledToolsInOrder,
+                  toHaveUsedModel, toHaveMadeRequests, toCostLessThan, toHaveUsedFewerTokensThan }</code>
+  <p>The matcher implementations, for <code>expect.extend(matchers)</code> in Jest or any Jest-compatible <code>expect</code>. <code>tomiko/vitest</code> registers them for you.</p>
+  <p><code>TomikoMatchers&lt;R&gt;</code> is the type interface, for augmenting your runner's matcher types. <code>RequestCount</code> is <code>{ min?: number; max?: number }</code>.</p>
+  <div class="code" data-lang="ts"><pre><code>interface TomikoMatchers&lt;R = unknown&gt; {
+  toHaveCalledTool(name: string, input?: unknown): R;
+  toHaveCalledToolTimes(name: string, times: number): R;
+  toHaveCalledToolsInOrder(names: string[]): R;
+  toHaveUsedModel(model: string | RegExp): R;
+  toHaveMadeRequests(count: number | RequestCount): R;
+  toCostLessThan(usd: number): R;
+  toHaveUsedFewerTokensThan(tokens: number): R;
+}</code></pre></div>
+  <p>Each matcher expects a cassette (any object with <code>name</code> and a <code>calls</code> array), and throws <code>TomikoError</code> if given something else. Semantics are covered in <a href="#assertions">Assertions</a>.</p>
+</section>
+
+<!-- ═════════════ API: reports ═════════════ -->
+<section id="api-reports">
+  <h2>Reports <span class="badge">tomiko</span></h2>
+  <code class="signature">reports(): readonly CassetteReport[]
+resetReports(): void
+summary(list?: readonly CassetteReport[]): Summary
+formatSummary(s?: Summary): string</code>
+  <div class="members">
+    <div class="member"><div class="member__name">reports()</div><p>Reports of every cassette closed in this process that served at least one request (or produced a warning), oldest first.</p></div>
+    <div class="member"><div class="member__name">resetReports()</div><p>Clears the list.</p></div>
+    <div class="member"><div class="member__name">summary(list?)</div><p>Totals over <code>list</code> (default: all reports): cassettes, replayed and recorded counts, usage, cost, saved cost, unpriced models and warnings. Cost fields are <code>null</code> when nothing had a price.</p></div>
+    <div class="member"><div class="member__name">formatSummary(s?)</div><p>A human-readable summary of <code>s</code> (default: <code>summary()</code>). Adds a <code>no price for</code> line and the warnings when there are any.</p></div>
+  </div>
+  <div class="code" data-lang="ts"><pre><code>interface Summary {
+  cassettes: number;
+  replayed: number;
+  recorded: number;
+  usage: Usage;
+  cost: number | null;
+  savedCost: number | null;
+  unpricedModels: string[];
+  warnings: string[];
+}</code></pre></div>
+</section>
+
+<!-- ═════════════ API: pricing ═════════════ -->
+<section id="api-pricing">
+  <h2>Pricing <span class="badge">tomiko</span></h2>
+  <code class="signature">const defaultPricing: PricingTable
+priceFor(model: string, table: PricingTable): ModelPrice | undefined
+costOf(usage: Usage, price: ModelPrice): number</code>
+  <div class="members">
+    <div class="member"><div class="member__name">defaultPricing</div><p>The built-in table of Anthropic list prices, USD per million tokens.</p></div>
+    <div class="member"><div class="member__name">priceFor(model, table)</div><p>Looks up a model: exact id first, otherwise the longest key the id starts with. Strips <code>anthropic.</code> prefixes and <code>@…</code> suffixes first.</p></div>
+    <div class="member"><div class="member__name">costOf(usage, price)</div><p>USD cost of a usage record. Missing cache prices default to 10% (read) and 125% (write) of the input price.</p></div>
+  </div>
+  <h3 id="default-prices">Built-in prices</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Model key</th><th>Input</th><th>Output</th><th>Cache read</th></tr></thead>
+    <tbody>
+      <tr><td><code>claude-fable-5-1</code></td><td>$10</td><td>$50</td><td>$0.25</td></tr>
+      <tr><td><code>claude-fable-5</code></td><td>$10</td><td>$50</td><td>10% of input</td></tr>
+      <tr><td><code>claude-opus-5-5</code></td><td>$4</td><td>$20</td><td>$0.20</td></tr>
+      <tr><td><code>claude-opus-5</code>, <code>claude-opus-4-8</code>, <code>-4-7</code>, <code>-4-6</code></td><td>$5</td><td>$25</td><td>10% of input</td></tr>
+      <tr><td><code>claude-sonnet-5-5</code></td><td>$2</td><td>$10</td><td>$0.20</td></tr>
+      <tr><td><code>claude-sonnet-5</code></td><td>$2</td><td>$10</td><td>10% of input</td></tr>
+      <tr><td><code>claude-sonnet-4-6</code></td><td>$3</td><td>$15</td><td>10% of input</td></tr>
+      <tr><td><code>claude-haiku-5-5</code></td><td>$0.10</td><td>$0.50</td><td>10% of input</td></tr>
+      <tr><td><code>claude-haiku-4-5</code></td><td>$1</td><td>$5</td><td>10% of input</td></tr>
+    </tbody>
+  </table></div>
+  <p>Prices are per million tokens. Cache writes default to 125% of input. Haiku 5.5 is billed higher above 100K input tokens; the table uses the base tier.</p>
+</section>
+
+<!-- ═════════════ API: errors ═════════════ -->
+<section id="api-errors">
+  <h2>Errors <span class="badge">tomiko</span></h2>
+  <p>Every error tomiko throws extends <code>TomikoError</code>, and each error's <code>name</code> is its class name.</p>
+  <div class="members">
+    <div class="member"><div class="member__name">TomikoError</div><p>The base class. Also thrown directly for misuse: an unknown mode, a bad <code>fuzzy</code> value, an invalid cassette name, an unsupported file format, a request on a closed cassette, <code>useCassette()</code> outside a test, <code>currentCassette()</code> with none active, a matcher given something that isn't a cassette, or <code>toCostLessThan</code> on an unpriced model.</p></div>
+    <div class="member"><div class="member__name">CassetteNotFoundError <span class="t">{ file }</span></div><p>Replay mode, and the cassette file doesn't exist, and the test sent a request. Record it by running locally (<code>auto</code>) or with <code>TOMIKO_MODE=record</code>.</p></div>
+    <div class="member"><div class="member__name">RequestMismatchError <span class="t">{ method, url, cassette, diff, similarity }</span></div><p>Replay mode, and no recording matches the request. <code>diff</code> is the formatted difference from the closest recording and <code>similarity</code> its score (0..1); both are <code>null</code> if nothing was recorded for that method and URL.</p></div>
+    <div class="member"><div class="member__name">NestedCassetteError</div><p>A cassette was activated while another was active. Cassettes don't nest.</p></div>
+  </div>
+  <div class="code" data-lang="ts"><pre><code>import { RequestMismatchError } from "tomiko";
+
+try {
+  await cassette("agent", run, { mode: "replay" });
+} catch (error) {
+  if (error instanceof RequestMismatchError) console.log(error.similarity, error.diff);
+  throw error;
+}</code></pre></div>
+</section>
+
+<!-- ═════════════ API: options ═════════════ -->
+<section id="api-options">
+  <h2><code>TomikoOptions</code> <span class="badge">type</span></h2>
+  <p>Accepted by <code>cassette()</code>, <code>openCassette()</code>, <code>useCassette()</code>, <code>setupCassettes()</code> and <code>configure()</code>.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>dir</code></td><td><code>string</code></td><td><code>"__cassettes__"</code></td><td>Where cassettes live, relative to the working directory. With <code>tomiko/vitest</code> the default is next to each test file.</td></tr>
+      <tr><td><code>mode</code></td><td><code>"auto" | "replay" | "record"</code></td><td><code>auto</code>, or <code>replay</code> on CI</td><td>See <a href="#modes">Modes</a>. <code>TOMIKO_MODE</code> overrides it.</td></tr>
+      <tr><td><code>fuzzy</code></td><td><code>number | false</code></td><td><code>false</code></td><td>Similarity threshold in <code>(0, 1]</code> for near matches. See <a href="#fuzzy">fuzzy</a>.</td></tr>
+      <tr><td><code>ignore</code></td><td><code>string[]</code></td><td><code>[]</code></td><td>Request body paths left out of matching, with <code>*</code> wildcards.</td></tr>
+      <tr><td><code>faults</code></td><td><code>Fault[]</code></td><td><code>[]</code></td><td>Simulated failures built with <code>fault.*</code>.</td></tr>
+      <tr><td><code>intercept</code></td><td><code>(request: Request) =&gt; boolean</code></td><td>every request</td><td>Only requests it accepts go through the cassette; others go straight to the network and aren't recorded.</td></tr>
+      <tr><td><code>redact</code></td><td><code>(i: Interaction) =&gt; Interaction</code></td><td>none</td><td>Transforms each interaction before it is written. See <a href="#redact">redact</a>.</td></tr>
+      <tr><td><code>pricing</code></td><td><code>PricingTable</code></td><td>Anthropic list prices</td><td>USD per million tokens, merged over the built-in table.</td></tr>
+      <tr><td><code>fetch</code></td><td><code>typeof fetch</code></td><td>the global <code>fetch</code> when the cassette opens</td><td>What recording uses to reach the network. Handy for a proxy or a fake server in tests.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="env-vars">Environment variables</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Variable</th><th>Effect</th></tr></thead>
+    <tbody>
+      <tr><td><code>TOMIKO_MODE</code></td><td>Forces the mode for every cassette: <code>auto</code>, <code>replay</code> or <code>record</code>. Wins over the <code>mode</code> option.</td></tr>
+      <tr><td><code>CI</code></td><td>When set (and not empty, <code>0</code> or <code>false</code>), the default mode is <code>replay</code>.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ═════════════ API: types ═════════════ -->
+<section id="api-types">
+  <h2>Types <span class="badge">type</span></h2>
+  <p>All types are exported from <code>tomiko</code>: <code>import type { RecordedCall } from "tomiko"</code>.</p>
+
+  <h3 id="t-recorded-call"><code>RecordedCall</code></h3>
+  <p>One request a cassette served during this run, as seen by assertions.</p>
+  <div class="code" data-lang="ts"><pre><code>interface RecordedCall {
+  method: string;
+  url: string;
+  requestBody: unknown;
+  status: number;          // 0 when the request failed without a response (simulated network error)
+  replayed: boolean;
+  fault?: FaultName;       // the simulated fault that hit this request
+  provider?: string;       // "anthropic", "openai", "google" or the host
+  model?: string;          // from the response, else from the request
+  usage?: Usage;
+  cost: number | null;     // null without usage or without a price
+  text: string;            // the model's text output
+  toolCalls: ToolCall[];
+}</code></pre></div>
+
+  <h3 id="t-tool-call"><code>ToolCall</code></h3>
+  <div class="code" data-lang="ts"><pre><code>interface ToolCall {
+  name: string;
+  input: unknown;  // parsed arguments; raw text if they were not valid JSON
+  id?: string;
+}</code></pre></div>
+
+  <h3 id="t-usage"><code>Usage</code></h3>
+  <div class="code" data-lang="ts"><pre><code>interface Usage {
+  inputTokens: number;      // excludes cached tokens
+  outputTokens: number;
+  cacheReadTokens: number;
+  cacheWriteTokens: number;
+}</code></pre></div>
+
+  <h3 id="t-cassette-report"><code>CassetteReport</code></h3>
+  <div class="code" data-lang="ts"><pre><code>interface CassetteReport {
+  name: string;
+  file: string;
+  mode: Mode;
+  replayed: number;
+  recorded: number;
+  usage: Usage;
+  cost: number | null;       // estimated USD of everything served
+  savedCost: number | null;  // estimated USD of what was replayed instead of sent
+  unpricedModels: string[];
+  warnings: string[];        // fuzzy matches, streams that failed while recording
+  saved: boolean;            // whether the file was written
+}</code></pre></div>
+
+  <h3 id="t-fault-target"><code>Fault</code>, <code>FaultTarget</code>, <code>FaultRequest</code>, <code>FaultName</code></h3>
+  <div class="code" data-lang="ts"><pre><code>type FaultName = "rate_limit" | "overloaded" | "server_error" | "network_error" | "cut_stream" | "latency";
+
+interface FaultTarget {
+  on?: number | number[];   // 1-based request numbers; wins over times
+  times?: number;           // default 1
+  when?: (request: FaultRequest) =&gt; boolean;
+}
+
+interface FaultRequest {
+  method: string;
+  url: string;              // redacted, as stored
+  body?: unknown;           // parsed JSON, raw text, or undefined
+}
+
+type Fault = FaultTarget &amp; (
+  | { name: "rate_limit" | "overloaded" | "server_error"; retryAfterMs: number }
+  | { name: "network_error"; message: string }
+  | { name: "cut_stream"; afterEvents: number }
+  | { name: "latency"; ms: number }
+);</code></pre></div>
+
+  <h3 id="t-cassette-file">Cassette file types</h3>
+  <div class="code" data-lang="ts"><pre><code>interface CassetteFile { version: 1; interactions: Interaction[] }
+
+interface Interaction {
+  request: RecordedRequest;
+  response: RecordedResponse;
+  meta: InteractionMeta;
+}
+
+interface RecordedRequest {
+  method: string;
+  url: string;       // secret query parameters redacted
+  body?: unknown;    // parsed JSON, raw text, or undefined
+}
+
+interface RecordedResponse {
+  status: number;
+  statusText?: string;
+  headers: Record&lt;string, string&gt;;
+  body: RecordedBody;
+}
+
+type RecordedBody =
+  | { type: "empty" }
+  | { type: "json"; value: unknown }
+  | { type: "text"; value: string }
+  | { type: "sse"; chunks: string[] }
+  | { type: "base64"; value: string };
+
+interface InteractionMeta {
+  provider?: string;
+  model?: string;
+  usage?: Usage;
+  recordedAt: string;   // ISO timestamp
+  durationMs: number;
+}</code></pre></div>
+
+  <h3 id="t-pricing">Pricing types</h3>
+  <div class="code" data-lang="ts"><pre><code>interface ModelPrice {
+  input: number;        // USD per 1M tokens
+  output: number;
+  cacheRead?: number;   // default: 10% of input
+  cacheWrite?: number;  // default: 125% of input
+}
+
+// Keys are model ids; a key also matches any id it is a prefix of (longest key wins).
+type PricingTable = Record&lt;string, ModelPrice&gt;;
+
+type Mode = "auto" | "replay" | "record";</code></pre></div>
+
+  <h3 id="t-resolve-mode"><code>resolveMode()</code></h3>
+  <code class="signature">resolveMode(option?: Mode): Mode</code>
+  <p>The mode a cassette would use for this <code>option</code>, applying <code>TOMIKO_MODE</code> and <code>CI</code>. Throws <code>TomikoError</code> for an unknown mode.</p>
+</section>
+
+<!-- ═════════════ API: CLI ═════════════ -->
+<section id="api-cli">
+  <h2>CLI <span class="badge">npx tomiko</span></h2>
+  <code class="signature">tomiko view [paths...] [--out file.html] [--no-open]</code>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Argument</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>paths...</code></td><td>Files or directories to include. A directory you name is searched in full. Without paths, tomiko finds every <code>__cassettes__</code> directory under the working directory, skipping <code>node_modules</code>, <code>.git</code>, <code>dist</code>, <code>build</code>, <code>coverage</code>, <code>.next</code> and <code>.turbo</code>.</td></tr>
+      <tr><td><code>--out &lt;file&gt;</code>, <code>-o</code>, <code>--out=&lt;file&gt;</code></td><td>Where to write the page. Default: a temporary file.</td></tr>
+      <tr><td><code>--no-open</code></td><td>Don't open the page in a browser. Use it on CI.</td></tr>
+      <tr><td><code>-h</code>, <code>--help</code></td><td>Show help.</td></tr>
+    </tbody>
+  </table></div>
+  <p>JSON files that aren't cassettes (anything without <code>version: 1</code> and an <code>interactions</code> array) are skipped. The command exits with code 1 if it finds no cassettes.</p>
+  <div class="code" data-lang="yaml" data-title="Attach the viewer to a CI run"><pre><code>- run: npx tomiko view --no-open --out tomiko-report.html
+- uses: actions/upload-artifact@v4
+  with:
+    name: tomiko-report
+    path: tomiko-report.html</code></pre></div>
+</section>
+
+<!-- ═════════════ RECIPES ═════════════ -->
+<section id="recipes">
+  <h2>Recipes</h2>
+
+  <h3 id="r-loops">Guard against runaway agent loops</h3>
+  <div class="code" data-lang="ts"><pre><code>await useCassette(async (c) =&gt; {
+  await agent.run("Book a table and email me the confirmation");
+  expect(c).toHaveMadeRequests({ max: 6 });
+  expect(c).toHaveCalledToolTimes("send_email", 1);
+});</code></pre></div>
+
+  <h3 id="r-budget">Put a budget on every test</h3>
+  <div class="code" data-lang="ts" data-title="vitest.setup.ts"><pre><code>import { afterEach, expect } from "vitest";
+import { currentCassette, setupCassettes } from "tomiko/vitest";
+
+setupCassettes();
+afterEach(() =&gt; {
+  expect(currentCassette()).toCostLessThan(0.10);
+});</code></pre></div>
+  <p>With Vitest's default <code>sequence.hooks: "stack"</code>, after-hooks run in reverse order of registration, so this <code>afterEach</code> runs before the one from <code>setupCassettes()</code> closes the cassette.</p>
+
+  <h3 id="r-retry">Test a retry policy</h3>
+  <div class="code" data-lang="ts"><pre><code>test("retries once, then falls back to a smaller model", async () =&gt; {
+  await useCassette(
+    async (c) =&gt; {
+      await agent.run("Summarize my inbox");
+      expect(c).toHaveUsedModel("claude-haiku-5-5");
+    },
+    { faults: [fault.overloaded({ when: (r) =&gt; r.body?.model === "claude-opus-5-5", times: Infinity })] },
+  );
+});</code></pre></div>
+
+  <h3 id="r-timeout">Test a timeout without waiting</h3>
+  <div class="code" data-lang="ts"><pre><code>const client = new Anthropic({ timeout: 50, maxRetries: 0 });
+
+await useCassette(
+  () =&gt; expect(client.messages.create(params)).rejects.toThrow(/timed out/i),
+  { faults: [fault.latency({ ms: 10_000 })] },
+);</code></pre></div>
+  <p>The simulated delay honours the request's abort signal, so the SDK's 50 ms timeout fires and the test finishes in 50 ms.</p>
+
+  <h3 id="r-only-llm">Record only LLM calls</h3>
+  <div class="code" data-lang="ts"><pre><code>const LLM_HOSTS = new Set(["api.anthropic.com", "api.openai.com"]);
+
+configure({ intercept: (request) =&gt; LLM_HOSTS.has(new URL(request.url).hostname) });</code></pre></div>
+
+  <h3 id="r-dynamic">Prompts with dates or random ids</h3>
+  <p>A prompt that contains today's date never matches yesterday's recording. Either freeze the value in tests (<code>vi.setSystemTime()</code>, a fixed seed), or leave the field out of matching with <code>ignore</code>. If the value sits inside a long string, consider moving it into a separate field you can ignore.</p>
+
+  <h3 id="r-iterate">Iterate on a prompt without re-recording each time</h3>
+  <div class="code" data-lang="ts"><pre><code>await useCassette(run, { fuzzy: 0.9 }); // small wording changes replay, with a warning</code></pre></div>
+  <p>Once the wording settles, re-record with <code>TOMIKO_MODE=record</code> and remove <code>fuzzy</code>, so the cassette matches the final prompt exactly.</p>
+
+  <h3 id="r-model-upgrade">Compare models</h3>
+  <div class="code" data-lang="ts"><pre><code>for (const model of ["claude-opus-5-5", "claude-sonnet-5-5"]) {
+  test(`books a table with ${model}`, async () =&gt; {
+    await useCassette(async (c) =&gt; {
+      await agent.run("Table for two", { model });
+      expect(c).toHaveCalledTool("book_table");
+      expect(c).toCostLessThan(0.05);
+    });
+  });
+}</code></pre></div>
+  <p>Each model gets its own cassette, so you can compare their behaviour, tokens and cost in <code>npx tomiko view</code>.</p>
+</section>
+
+<!-- ═════════════ TROUBLESHOOTING ═════════════ -->
+<section id="troubleshooting">
+  <h2>Troubleshooting</h2>
+
+  <h3 id="ts-auth">“Could not resolve authentication method”</h3>
+  <p>The Anthropic SDK (and the OpenAI SDK, with its own message) throws this before sending the request when no API key is set, so tomiko never sees the request. When replaying, set any value: <code>ANTHROPIC_API_KEY=dummy</code>. The key is never stored and a replay never sends it.</p>
+
+  <h3 id="ts-not-recorded">Requests go to the real API instead of the cassette</h3>
+  <p>The client captured <code>fetch</code> before the cassette was active, usually because it was created at module load. Pass <code>fetch</code> from tomiko: <code>new Anthropic({ fetch })</code>. See <a href="#module-clients">Clients created before a test</a>.</p>
+
+  <h3 id="ts-not-found"><code>CassetteNotFoundError</code> on CI</h3>
+  <p>The test sent a request, but its cassette was never recorded or never committed. Run the test locally once, then commit <code>__cassettes__/</code>. Check that <code>.gitignore</code> doesn't exclude it.</p>
+
+  <h3 id="ts-mismatch"><code>RequestMismatchError</code> after changing a prompt</h3>
+  <p>That's the point: the recording no longer reflects your code. The diff shows what changed. Re-record with <code>TOMIKO_MODE=record</code>, or allow near matches with <code>fuzzy</code>. If the difference is a volatile field (an id, a timestamp), add it to <code>ignore</code>.</p>
+
+  <h3 id="ts-nested"><code>NestedCassetteError</code></h3>
+  <p>Two cassettes were active at once: <code>useCassette()</code> inside a test already covered by <code>setupCassettes()</code>, a <code>cassette()</code> inside another, or concurrent tests. Use one at a time, or <code>openCassette()</code> for concurrent work.</p>
+
+  <h3 id="ts-cost"><code>toCostLessThan</code> throws “no price for …”</h3>
+  <p>The model isn't in the price table. Add it: <code>configure({ pricing: { "gpt-5": { input: 1.25, output: 10 } } })</code>. tomiko refuses to count unknown models as free, so a budget can't pass by accident.</p>
+
+  <h3 id="ts-flaky">Recording works, but replay gives different results</h3>
+  <p>Something else in your code is non-deterministic: the current time, random numbers, or unordered parallel requests. Two identical requests replay in recording order, but different requests sent in parallel may still race. Freeze time and seeds in tests, and look for parallel calls whose order differs between runs.</p>
+
+  <h3 id="ts-types">Matchers don't type-check</h3>
+  <p>Import <code>tomiko/vitest</code> somewhere in the test (or the setup file) so the type augmentation loads. On Vitest older than 5, or on Jest, declare the types yourself: see <a href="#vitest-types">Vitest</a> and <a href="#jest">Jest</a>.</p>
+
+  <h3 id="ts-help">Still stuck?</h3>
+  <p>Open an issue on <a href="https://github.com/saykachi/tomiko/issues" target="_blank" rel="noopener">GitHub</a> with the error and, if possible, the cassette. Check it for personal data first.</p>
+
+  <nav class="pager" aria-label="More">
+    <a href="index.html"><small>← Back to</small><b>tomiko home</b></a>
+    <a href="#introduction"><small>Back to top</small><b>Introduction ↑</b></a>
+  </nav>
+</section>
+
+    </main>
+
+    <!-- ───────────── ON THIS PAGE ───────────── -->
+    <aside class="toc" aria-label="On this page">
+      <p class="toc__title">On this page</p>
+      <ul data-toc></ul>
+      <div class="toc__links">
+        <a href="https://github.com/saykachi/tomiko" target="_blank" rel="noopener">GitHub repository ↗</a>
+        <a href="https://www.npmjs.com/package/tomiko" target="_blank" rel="noopener">npm package ↗</a>
+        <a href="https://github.com/saykachi/tomiko/issues" target="_blank" rel="noopener">Report an issue ↗</a>
+      </div>
+    </aside>
+  </div>
+
+  <a class="back-top" href="#introduction" aria-label="Back to top">↑</a>
+  <div class="toast" role="status" aria-live="polite"></div>
+  <script src="assets/js/highlight.js" defer></script>
+  <script src="assets/js/docs.js" defer></script>
+</body>
+</html>

@@ -318,6 +318,51 @@
 .install--big { height: 60px; font-size: 16px; padding: 0 12px 0 26px; }
 .cta .btn { height: 60px; padding: 0 30px; }
 
+/* ───────────── sneak peek ───────────── */
+@property --peek-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+.peek { padding: 0 0 120px; }
+.peek__card {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: grid; grid-template-columns: 1.15fr .85fr; gap: 28px 56px; align-items: end;
+  padding: 48px 52px 40px; border-radius: 28px; background: var(--bg-2);
+}
+/* A light that runs slowly around the border. */
+.peek__card::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; padding: 1px;
+  background: conic-gradient(from var(--peek-angle), var(--line-2) 0deg, var(--line-2) 250deg, rgba(255, 255, 255, .7) 300deg, var(--accent) 320deg, var(--line-2) 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: peek-spin 7s linear infinite;
+}
+@keyframes peek-spin { to { --peek-angle: 360deg; } }
+.peek__glow {
+  position: absolute; z-index: -2; right: -120px; top: -160px; width: 520px; height: 520px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, .07), transparent 65%);
+  pointer-events: none;
+}
+.peek__tag { display: flex; align-items: center; gap: 10px; margin: 0 0 20px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.peek__sep { color: var(--dim); }
+.peek__dot { position: relative; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.peek__dot::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 1px solid var(--accent); animation: peek-ping 2s var(--ease) infinite; }
+@keyframes peek-ping { from { transform: scale(.4); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+.peek__title { margin: 0; font-size: clamp(40px, 5.4vw, 80px); line-height: .95; letter-spacing: -.055em; font-weight: 750; }
+.peek__title .serif { font-size: 1.06em; color: var(--muted); }
+.peek__side p { margin: 0 0 20px; color: var(--muted); font-size: 16.5px; line-height: 1.65; }
+.peek__link { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; color: var(--text); border-bottom: 1px solid var(--line-3); padding-bottom: 3px; transition: border-color .3s; }
+.peek__link:hover { border-color: var(--text); }
+.peek__link svg { transition: transform .45s var(--ease); }
+.peek__link:hover svg { transform: translateX(4px); }
+.peek__providers { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; padding-top: 26px; border-top: 1px solid var(--line); font-size: 13px; }
+.peek__providers span { padding: 7px 13px; border-radius: 99px; border: 1px solid var(--line-2); color: var(--muted); }
+.peek__providers .is-next { color: var(--text); border-style: dashed; border-color: var(--line-3); }
+.peek__providers i { font-style: normal; margin-left: 6px; color: var(--accent); }
+@media (max-width: 900px) {
+  .peek__card { grid-template-columns: 1fr; padding: 32px 24px 26px; border-radius: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .peek__card::before { animation: none; --peek-angle: 300deg; }
+}
+
 /* ───────────── footer ───────────── */
 .footer { border-top: 1px solid var(--line); padding-top: 44px; overflow: hidden; }
 .footer__top { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }

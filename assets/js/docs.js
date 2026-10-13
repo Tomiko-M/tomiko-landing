@@ -206,8 +206,25 @@
     const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName ?? "");
     if ((e.key === "/" || (e.key === "k" && (e.metaKey || e.ctrlKey))) && !typing) {
       e.preventDefault();
-      if (matchMedia("(max-width: 900px)").matches) setOpen(true);
+      if (matchMedia("(max-width: 920px)").matches) setOpen(true);
       input.focus();
     }
   });
+  /* ───────────── blocks fade in as they are reached ───────────── */
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
+    const blocks = $$(".content > section > :is(h2, h3, p, ul, ol, .code, .table-wrap, .callout, .members, .doc-cards, .whats-new, .lifecycle, .signature, .doc-hero)");
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        e.target.classList.add("in");
+        io.unobserve(e.target);
+      }
+    }, { rootMargin: "0px 0px -30px 0px" });
+    blocks.forEach((b) => {
+      // Blocks already on screen stay put; only those below the fold animate in.
+      if (b.getBoundingClientRect().top < innerHeight) return;
+      b.classList.add("reveal");
+      io.observe(b);
+    });
+  }
 })();
